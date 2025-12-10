@@ -30,7 +30,7 @@ lint:
 template:
   org: nfdata-omics
   name: nanotranseq
-  description: 'Analysis of cDNA and direct RNA long-read sequencing data '
+  description: "Analysis of cDNA and direct RNA long-read sequencing data "
   author: Karla Alejandra Ruiz Ceja, Leandro Tiburske
   version: 1.0.0dev
   force: true
