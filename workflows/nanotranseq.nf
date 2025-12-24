@@ -20,7 +20,7 @@ workflow NANOTRANSEQ {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    
+
     main:
 
     ch_versions = channel.empty()
