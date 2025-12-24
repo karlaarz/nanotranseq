@@ -3,7 +3,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
+include { RAW_READS_QC           } from '../subworkflows/local/raw_read_qc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -20,18 +20,20 @@ workflow NANOTRANSEQ {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+    
     main:
 
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
+
     //
     // MODULE: Run FastQC
     //
-    FASTQC (
+    RAW_READS_QC (
         ch_samplesheet
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+    ch_multiqc_files = ch_multiqc_files.mix(RAW_READS_QC.out.fastqc_zip.collect{it[1]})
+    ch_versions = ch_versions.mix(RAW_READS_QC.out.versions)
 
     //
     // Collate and save software versions
@@ -103,7 +105,8 @@ workflow NANOTRANSEQ {
         []
     )
 
-    emit:multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    emit:
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
