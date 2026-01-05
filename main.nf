@@ -42,6 +42,7 @@ workflow NFDATAOMICS_NANOTRANSEQ {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    direct_rna  // channel: direct_rna read in from --direct_rna
 
     main:
 
@@ -49,7 +50,8 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     // WORKFLOW: Run pipeline
     //
     NANOTRANSEQ (
-        samplesheet
+        samplesheet,
+        direct_rna
     )
     emit:
     multiqc_report = NANOTRANSEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -73,6 +75,7 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.direct_rna,
         params.help,
         params.help_full,
         params.show_hidden
@@ -82,7 +85,8 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFDATAOMICS_NANOTRANSEQ (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.direct_rna
     )
     //
     // SUBWORKFLOW: Run completion tasks

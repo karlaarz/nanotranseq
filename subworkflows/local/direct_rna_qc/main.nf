@@ -1,18 +1,28 @@
 //
-// RAW READS QUALITY CONTROL WORKFLOW
+// QUALITY CONTROL FOR DIRECT RNA WORKFLOW
 //
 
+include { CHOPPER     } from '../../../modules/nf-core/chopper/main'
 include { FASTQC      } from '../../../modules/nf-core/fastqc/main'
 include { TOULLIGQC   } from '../../../modules/nf-core/toulligqc/main'
 include { NANOPLOT    } from '../../../modules/nf-core/nanoplot/main'
 include { MULTIQC     } from '../../../modules/nf-core/multiqc/main'
 
-workflow RAW_READS_QC {
+workflow DIRECT_RNA_QC {
     take:
-    reads    // Raw reads input channel
+    raw_reads   // raw reads input channel
 
     main:
     versions = Channel.empty()
+
+    // Run CHOPPER
+    CHOPPER (
+        raw_reads,
+        channel.value(file("no_fasta", checkIfExists: false))
+    )
+
+    // Create channel to store chopper's output
+    reads = CHOPPER.out.fastq
 
     // Run FASTQC
     FASTQC(reads)
@@ -39,10 +49,14 @@ workflow RAW_READS_QC {
     nanoplot_png  = NANOPLOT.out.png
     nanoplot_txt  = NANOPLOT.out.txt
 
+
     // Collect versions for all tools used in this workflow
-    versions = versions.mix(FASTQC.out.versions, MULTIQC.out.versions, TOULLIGQC.out.versions, NANOPLOT.out.versions)
+    versions = versions.mix(FASTQC.out.versions, MULTIQC.out.versions, TOULLIGQC.out.versions, NANOPLOT.out.versions, CHOPPER.out.versions)
 
     emit:
+
+    reads
+
     fastqc_zip
     fastqc_html
 
