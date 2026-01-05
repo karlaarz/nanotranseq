@@ -26,7 +26,6 @@ workflow NANOTRANSEQ {
     main:
 
     ch_versions = channel.empty()
-    ch_multiqc_files = channel.empty()
 
     //
     // MODULE: Run QC on raw reads
