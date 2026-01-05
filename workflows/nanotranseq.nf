@@ -43,7 +43,7 @@ workflow NANOTRANSEQ {
         DIRECT_RNA_QC (
             ch_samplesheet,
         )
-        
+
         ch_versions = ch_versions.mix(DIRECT_RNA_QC.out.versions)
 
     }
