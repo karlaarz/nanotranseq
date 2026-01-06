@@ -6,6 +6,7 @@
 include { RAW_READS_QC           } from '../subworkflows/local/raw_read_qc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { DIRECT_RNA_QC          } from '../subworkflows/local/direct_rna_qc/main'
+include { ALIGNMENT              } from '../subworkflows/local/alignment/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -21,7 +22,9 @@ workflow NANOTRANSEQ {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+    ch_fasta       // channel: fasta read in from --fasta
     ch_direct_rna // channel: direct_rna read in from --direct_rna
+    ch_use_gpus   // channel: use_gpus read in from --use_gpus
 
     main:
 
@@ -47,6 +50,15 @@ workflow NANOTRANSEQ {
 
     }
 
+    // If direct RNA was performed, use CHOPPER's output as reads. If not, use raw data
+    ch_reads = ch_direct_rna ? DIRECT_RNA_QC.out.reads : ch_samplesheet
+
+    //
+    // Run alignment
+    //
+    ALIGNMENT(ch_use_gpus,
+              ch_reads,
+              ch_fasta)
     //
     // Collate and save software versions
     //

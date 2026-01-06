@@ -34,6 +34,11 @@
                     "fa_icon": "fas fa-dna",
                     "description": "Set to true if direct RNA sequencing was used"
                 },
+                "use_gpus": {
+                    "type": "boolean",
+                    "description": "Use GPUs to speed up alignment",
+                    "fa_icon": "fas fa-laptop-code"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

@@ -42,7 +42,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    fasta       // channel: fasta read in from --fasta
     direct_rna  // channel: direct_rna read in from --direct_rna
+    use_gpus    // channel: use_gpus read in from --use_gpus
 
     main:
 
@@ -51,7 +53,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     //
     NANOTRANSEQ (
         samplesheet,
-        direct_rna
+        fasta,
+        direct_rna,
+        use_gpus
     )
     emit:
     multiqc_report = NANOTRANSEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -75,7 +79,9 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.fasta,
         params.direct_rna,
+        params.use_gpus,
         params.help,
         params.help_full,
         params.show_hidden
@@ -86,7 +92,9 @@ workflow {
     //
     NFDATAOMICS_NANOTRANSEQ (
         PIPELINE_INITIALISATION.out.samplesheet,
-        PIPELINE_INITIALISATION.out.direct_rna
+        PIPELINE_INITIALISATION.out.fasta,
+        PIPELINE_INITIALISATION.out.direct_rna,
+        PIPELINE_INITIALISATION.out.use_gpus
     )
     //
     // SUBWORKFLOW: Run completion tasks
