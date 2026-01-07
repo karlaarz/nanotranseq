@@ -16,7 +16,7 @@ workflow ALIGNMENT {
     minimap2_bam = Channel.empty()
     minimap2_bai = Channel.empty()
 
-    // Run Parabricks implementation of Minimap2 if use_gpus = true. 
+    // Run Parabricks implementation of Minimap2 if use_gpus = true.
     //If not, run standard implementation
     if (use_gpus == true) {
 
@@ -37,16 +37,23 @@ workflow ALIGNMENT {
 
     } else {
 
-        // If a Minimap2 index is provided, set fasta to null to skip indexing step
-        index_input = minimap2_index
-            .filter { it.name == 'no_minimap2_index' }
-            .combine(genome_reference)
-            .map { _, meta, fasta -> tuple(meta, fasta) }
+        if (!params.minimap2_index) {
 
-        MINIMAP2_INDEX(index_input)
+            // If a Minimap2 index is provided, set fasta to null to skip indexing step
+            index_input = minimap2_index
+                .filter { it.name == 'no_minimap2_index' }
+                .combine(genome_reference)
+                .map { _, meta, fasta -> tuple(meta, fasta) }
 
-        final_index = MINIMAP2_INDEX.out.index
-            .collect()
+            MINIMAP2_INDEX(index_input)
+
+            final_index = MINIMAP2_INDEX.out.index
+                .collect()
+        } else {
+            final_index = minimap2_index
+                .map { file -> tuple(file.baseName, file) }
+                .collect()
+        }
 
         // Align samples based on reference genome
         bam_format = true

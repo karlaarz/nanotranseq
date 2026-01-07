@@ -91,7 +91,7 @@ workflow PIPELINE_INITIALISATION {
             def meta = file.baseName
             tuple(meta, file)
     }
-        
+
 
     //
     // Create channel from params.direct_rna
@@ -111,7 +111,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from params.minimap2_index
     //
-    ch_minimap2_index = minimap2_index ? 
+    ch_minimap2_index = minimap2_index ?
                         Channel.from(file(minimap2_index)) :
                         Channel.from(file("no_minimap2_index", checkIfExists: false))
 
