@@ -46,6 +46,7 @@ workflow ALIGNMENT {
         MINIMAP2_INDEX(index_input)
 
         final_index = MINIMAP2_INDEX.out.index
+            .collect()
 
         // Align samples based on reference genome
         bam_format = true
