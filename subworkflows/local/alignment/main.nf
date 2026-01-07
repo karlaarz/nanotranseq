@@ -8,6 +8,7 @@ workflow ALIGNMENT {
     use_gpus                // boolean: use gpus during alignment. default: false
     reads                   // reads channel: val(meta1),  path(reads)
     genome_reference        // genome refence: val(meta2),  path(fasta)
+    minimap2_index          // minimap2 pre-built reference: path(reference)
 
     main:
     versions = Channel.empty()
@@ -36,8 +37,15 @@ workflow ALIGNMENT {
 
     } else {
 
-        // First, index the reference genome
-        MINIMAP2_INDEX(genome_reference)
+        // If a Minimap2 index is provided, set fasta to null to skip indexing step
+        index_input = minimap2_index
+            .filter { it.name == 'no_minimap2_index' }
+            .combine(genome_reference)
+            .map { _, meta, fasta -> tuple(meta, fasta) }
+
+        MINIMAP2_INDEX(index_input)
+
+        final_index = MINIMAP2_INDEX.out.index
 
         // Align samples based on reference genome
         bam_format = true
@@ -46,7 +54,7 @@ workflow ALIGNMENT {
         cigar_bam = true
 
         MINIMAP2_ALIGN(reads,
-                       MINIMAP2_INDEX.out.index,
+                       final_index,
                        bam_format,
                        bam_index_extension,
                        cigar_paf_format,
@@ -55,7 +63,7 @@ workflow ALIGNMENT {
         minimap2_bam = MINIMAP2_ALIGN.out.bam
         minimap2_bai = MINIMAP2_ALIGN.out.index
 
-        versions = versions.mix(MINIMAP2_INDEX.out.versions, MINIMAP2_ALIGN.out.versions)
+        versions = versions.mix(MINIMAP2_ALIGN.out.versions)
 
     }
 

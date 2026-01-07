@@ -25,6 +25,7 @@ workflow NANOTRANSEQ {
     ch_fasta       // channel: fasta read in from --fasta
     ch_direct_rna // channel: direct_rna read in from --direct_rna
     ch_use_gpus   // channel: use_gpus read in from --use_gpus
+    ch_minimap2_index   // channel: index read in from --minimap2_index
 
     main:
 
@@ -58,7 +59,9 @@ workflow NANOTRANSEQ {
     //
     ALIGNMENT(ch_use_gpus,
               ch_reads,
-              ch_fasta)
+              ch_fasta,
+              ch_minimap2_index
+              )
     //
     // Collate and save software versions
     //

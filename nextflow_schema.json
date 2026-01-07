@@ -39,6 +39,11 @@
                     "description": "Use GPUs to speed up alignment",
                     "fa_icon": "fas fa-laptop-code"
                 },
+                "minimap2_index": {
+                    "type": "string",
+                    "description": "Path to path containing indexes for Minimap2",
+                    "fa_icon": "far fa-copy"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
