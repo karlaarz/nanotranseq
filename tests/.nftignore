@@ -17,4 +17,5 @@ qc/{post_chopper,raw_reads}/**/TOULLIGQC/**/*.{html,data}
 qc/{post_chopper,raw_reads}/**/TOULLIGQC/**/images/*.{html,js}
 qc/{post_chopper,raw_reads}/**/TOULLIGQC/*Toulligqc-report-*/**
 qc/post_chopper/**/CHOPPER/*.{gz}
+alignment/**/MINIMAP2_ALIGN/*.{bam,bai}
 pipeline_info/*.{html,json,txt,yml}
