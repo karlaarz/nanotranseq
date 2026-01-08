@@ -18,7 +18,7 @@ workflow ALIGNMENT {
 
     // Run Parabricks implementation of Minimap2 if use_gpus = true.
     //If not, run standard implementation
-    if (use_gpus == true) {
+    if (params.use_gpus) {
 
         interval = tuple([], [])
         known_sites = tuple([], [])
