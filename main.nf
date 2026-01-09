@@ -45,7 +45,6 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     samplesheet // channel: samplesheet read in from --input
     fasta       // channel: fasta read in from --fasta
     direct_rna  // channel: direct_rna read in from --direct_rna
-    use_gpus    // channel: use_gpus read in from --use_gpus
     minimap2_index  // channel: minimap2_index read in from --minimap2_index
 
     main:
@@ -57,7 +56,6 @@ workflow NFDATAOMICS_NANOTRANSEQ {
         samplesheet,
         fasta,
         direct_rna,
-        use_gpus,
         minimap2_index,
     )
     emit:
@@ -84,7 +82,6 @@ workflow {
         params.input,
         params.fasta,
         params.direct_rna,
-        params.use_gpus,
         params.minimap2_index,
         params.help,
         params.help_full,
@@ -98,7 +95,6 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet,
         PIPELINE_INITIALISATION.out.fasta,
         PIPELINE_INITIALISATION.out.direct_rna,
-        PIPELINE_INITIALISATION.out.use_gpus,
         PIPELINE_INITIALISATION.out.minimap2_index,
     )
     //

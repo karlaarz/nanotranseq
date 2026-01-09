@@ -35,7 +35,6 @@ workflow PIPELINE_INITIALISATION {
     input             //  string: Path to input samplesheet
     fasta             // string: Path to FASTA file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
-    use_gpus          // boolean: Boolean whether to use GPUs or not
     minimap2_index    // string: Path to Minimap2 index
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
@@ -102,13 +101,6 @@ workflow PIPELINE_INITIALISATION {
         .set { ch_direct_rna }
 
     //
-    // Create channel from params.use_gpus
-    //
-    channel
-        .from(params.use_gpus)
-        .set { ch_use_gpus }
-
-    //
     // Create channel from params.minimap2_index
     //
     ch_minimap2_index = minimap2_index ?
@@ -143,7 +135,6 @@ workflow PIPELINE_INITIALISATION {
     samplesheet = ch_samplesheet
     fasta       = ch_fasta
     direct_rna  = ch_direct_rna
-    use_gpus    = ch_use_gpus
     minimap2_index = ch_minimap2_index
     versions    = ch_versions
 }

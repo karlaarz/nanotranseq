@@ -5,7 +5,6 @@ include { MINIMAP2_ALIGN      } from '../../../modules/nf-core/minimap2/align/ma
 workflow ALIGNMENT {
 
     take:
-    use_gpus                // boolean: use gpus during alignment. default: false
     reads                   // reads channel: val(meta1),  path(reads)
     genome_reference        // genome refence: val(meta2),  path(fasta)
     minimap2_index          // minimap2 pre-built reference: path(reference)
