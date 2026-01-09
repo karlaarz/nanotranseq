@@ -1,0 +1,19 @@
+Changes in component 'nf-core/parabricks/minimap2'
+'modules/nf-core/parabricks/minimap2/meta.yml' is unchanged
+Changes in 'parabricks/minimap2/main.nf':
+--- modules/nf-core/parabricks/minimap2/main.nf
++++ modules/nf-core/parabricks/minimap2/main.nf
+@@ -5,7 +5,7 @@
+     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
+     stageInMode 'copy'
+ 
+-    container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
++    container "nvcr.io/nvidia/clara/clara-parabricks:4.4.0-1"
+ 
+     input:
+     tuple val(meta),  path(reads)
+
+'modules/nf-core/parabricks/minimap2/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/parabricks/minimap2/tests/nextflow.config' is unchanged
+'modules/nf-core/parabricks/minimap2/tests/main.nf.test' is unchanged
+************************************************************

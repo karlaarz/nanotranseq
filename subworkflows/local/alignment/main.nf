@@ -22,7 +22,7 @@ workflow ALIGNMENT {
 
         interval = tuple([], [])
         known_sites = tuple([], [])
-        output_fmt = 'bai'
+        output_fmt = 'bam'
 
         PARABRICKS_MINIMAP2(reads,
                             genome_reference,

@@ -44,7 +44,8 @@
                     "parabricks/minimap2": {
                         "branch": "master",
                         "git_sha": "bc4ad3855d9b44430e20c324c3bf9d32c56de2a0",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/minimap2/parabricks-minimap2.diff"
                     },
                     "salmon/quant": {
                         "branch": "master",
