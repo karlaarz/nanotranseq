@@ -8,6 +8,13 @@
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "MINIMAP2_ALIGN": {
+                    "minimap2": "2.29-r1283",
+                    "samtools": 1.21
+                },
+                "MINIMAP2_INDEX": {
+                    "minimap2": "2.29-r1283"
+                },
                 "MULTIQC": {
                     "multiqc": 1.32
                 },
@@ -209,6 +216,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.4"
         },
-        "timestamp": "2026-01-08T08:23:06.967684"
+        "timestamp": "2026-01-12T12:14:49.708018"
     }
 }

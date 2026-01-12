@@ -46,6 +46,8 @@ workflow ALIGNMENT {
 
             MINIMAP2_INDEX(index_input)
 
+            versions = versions.mix(MINIMAP2_INDEX.out.versions)
+
             final_index = MINIMAP2_INDEX.out.index
                 .collect()
         } else {

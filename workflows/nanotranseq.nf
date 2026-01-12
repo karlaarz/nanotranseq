@@ -60,6 +60,9 @@ workflow NANOTRANSEQ {
               ch_fasta,
               ch_minimap2_index
               )
+
+    ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
     //
     // Collate and save software versions
     //
