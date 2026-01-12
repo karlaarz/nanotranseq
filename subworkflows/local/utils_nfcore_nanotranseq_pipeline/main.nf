@@ -34,6 +34,7 @@ workflow PIPELINE_INITIALISATION {
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
     fasta             // string: Path to FASTA file
+    gtf               // string: Path to GTF file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
     minimap2_index    // string: Path to Minimap2 index
     help              // boolean: Display help message and exit
@@ -91,6 +92,10 @@ workflow PIPELINE_INITIALISATION {
             tuple(meta, file)
     }
 
+    //
+    // Create channel from params.gtf
+    //
+    ch_gtf = Channel.value(file(gtf))
 
     //
     // Create channel from params.direct_rna
@@ -106,6 +111,13 @@ workflow PIPELINE_INITIALISATION {
     ch_minimap2_index = minimap2_index ?
                         Channel.from(file(minimap2_index)) :
                         Channel.from(file("no_minimap2_index", checkIfExists: false))
+
+    //
+    // Validate params.quantification_tool
+    //
+    if ( params.quantification_tool != 'featurecounts' && params.quantification_tool != 'salmon' ) {
+        exit 1, "Invalid quantification tool selected. Use either `featurecounts` or `salmon`"
+    }
 
     //
     // Create channel from input file provided through params.input
@@ -134,6 +146,7 @@ workflow PIPELINE_INITIALISATION {
     emit:
     samplesheet = ch_samplesheet
     fasta       = ch_fasta
+    gtf         = ch_gtf
     direct_rna  = ch_direct_rna
     minimap2_index = ch_minimap2_index
     versions    = ch_versions

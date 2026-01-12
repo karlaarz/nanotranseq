@@ -7,6 +7,7 @@ include { RAW_READS_QC           } from '../subworkflows/local/raw_read_qc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { DIRECT_RNA_QC          } from '../subworkflows/local/direct_rna_qc/main'
 include { ALIGNMENT              } from '../subworkflows/local/alignment/main'
+include { QUANTIFICATION         } from '../subworkflows/local/quantification/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -23,6 +24,7 @@ workflow NANOTRANSEQ {
     take:
     ch_samplesheet // channel: samplesheet read in from --input
     ch_fasta       // channel: fasta read in from --fasta
+    ch_gtf          // channel: gtf file read in from --gtf
     ch_direct_rna // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
 
@@ -62,6 +64,19 @@ workflow NANOTRANSEQ {
               )
 
     ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
+    // Create channel for Alignment's output BAM file
+    ch_bam = ALIGNMENT.out.minimap2_bam
+
+    //
+    // Run quantification
+    //
+    QUANTIFICATION(
+        ch_bam,
+        ch_gtf,
+    )
+
+    ch_versions = ch_versions.mix(QUANTIFICATION.out.versions)
 
     //
     // Collate and save software versions
