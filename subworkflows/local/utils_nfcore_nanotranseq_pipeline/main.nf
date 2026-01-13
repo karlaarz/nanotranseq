@@ -35,6 +35,7 @@ workflow PIPELINE_INITIALISATION {
     input             //  string: Path to input samplesheet
     fasta             // string: Path to FASTA file
     gtf               // string: Path to GTF file
+    transcript_fasta  // string: Path to transcript FASTA file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
     minimap2_index    // string: Path to Minimap2 index
     help              // boolean: Display help message and exit
@@ -98,6 +99,13 @@ workflow PIPELINE_INITIALISATION {
     ch_gtf = Channel.value(file(gtf))
 
     //
+    // Create channel from params.transcript_fasta
+    //
+    ch_transcript_fasta = transcript_fasta ?
+                          Channel.from(file(transcript_fasta)) :
+                          Channel.from(file("no_transcript_fasta"))
+
+    //
     // Create channel from params.direct_rna
     //
 
@@ -147,6 +155,7 @@ workflow PIPELINE_INITIALISATION {
     samplesheet = ch_samplesheet
     fasta       = ch_fasta
     gtf         = ch_gtf
+    transcript_fasta = ch_transcript_fasta
     direct_rna  = ch_direct_rna
     minimap2_index = ch_minimap2_index
     versions    = ch_versions

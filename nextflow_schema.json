@@ -89,6 +89,10 @@
                     "type": "string",
                     "description": "Path to reference GTF file."
                 },
+                "transcript_fasta": {
+                    "type": "string",
+                    "description": "FASTA file containing transcript sequences."
+                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",

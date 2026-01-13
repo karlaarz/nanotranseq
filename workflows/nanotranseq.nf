@@ -25,6 +25,7 @@ workflow NANOTRANSEQ {
     ch_samplesheet // channel: samplesheet read in from --input
     ch_fasta       // channel: fasta read in from --fasta
     ch_gtf          // channel: gtf file read in from --gtf
+    ch_transcript_fasta     // channel: transcript fasta file read in from --transcript_fasta
     ch_direct_rna // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
 
@@ -56,22 +57,31 @@ workflow NANOTRANSEQ {
     ch_reads = ch_direct_rna ? DIRECT_RNA_QC.out.reads : ch_samplesheet
 
     //
-    // Run alignment
+    // Run alignment if Salmon is not the selected quantification tool
     //
-    ALIGNMENT(ch_reads,
-              ch_fasta,
-              ch_minimap2_index
-              )
+    if (params.quantification_tool != 'salmon') {
 
-    ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+        ALIGNMENT(ch_reads,
+                  ch_fasta,
+                  ch_minimap2_index
+                  )
 
-    // Create channel for Alignment's output BAM file
-    ch_bam = ALIGNMENT.out.minimap2_bam
+        ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
+        // Create channel for Alignment's output BAM file
+        ch_bam = ALIGNMENT.out.minimap2_bam
+
+    } else {
+        ch_bam = Channel.from(tuple([], []))
+    }
 
     //
     // Run quantification
     //
     QUANTIFICATION(
+        ch_reads,
+        ch_fasta,
+        ch_transcript_fasta,
         ch_bam,
         ch_gtf,
     )

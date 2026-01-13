@@ -257,30 +257,19 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,11b68e77ac305d5554dfc457f143d879",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "multiqc_fastqc.txt:md5,f5fb949b5db4f5baab966423f1ae6c2e",
-                "stringtie.merged.gtf:md5,7ef204714f33cec376bbd2a5f2c6173f",
                 "versions.yml:md5,f09ff5c2b5f9ffaed44ac7e8e3f5d997",
-                "gene.featureCounts.tsv:md5,f596b695ca472a350b69cc1750c1ca8c",
-                "gene.featureCounts.tsv.summary:md5,ff3c7035db23ef229678b7c3173da7b2",
-                "transcript.featureCounts.tsv:md5,824af9833cd92d429d58cc55c1e359ff",
-                "transcript.featureCounts.tsv.summary:md5,3f1713b43b7655f99d9bd2e6871ea544",
                 "versions.yml:md5,c395aa68a7ff9c64ebeb32eb510de983",
                 "e2t.ctab:md5,0012bed38fdc5b105a224f34735ccdf0",
                 "e_data.ctab:md5,bb56fc9c03344e9eeb6d6179e7b68127",
                 "i2t.ctab:md5,554c8824913ed80b30bf4d94d6e3f598",
                 "i_data.ctab:md5,2972a5d6e1b6a5d23b5ed9d03684cd90",
                 "t_data.ctab:md5,dd5375f3f06a92930f462fda2f09477c",
-                "K562.coverage.gtf:md5,4cca66a191bea573a0ba2e9418a92a49",
-                "K562.gene.abundance.txt:md5,7de59b80254d4d3e630c77a2be425c63",
-                "K562.transcripts.gtf:md5,b53f582fc2fbb55c4a43526f1a790afa",
                 "versions.yml:md5,746f51a22a333b345638ab0e2accd1bd",
                 "e2t.ctab:md5,0012bed38fdc5b105a224f34735ccdf0",
                 "e_data.ctab:md5,9c95777e0b5731211d89e831aa87ce59",
                 "i2t.ctab:md5,554c8824913ed80b30bf4d94d6e3f598",
                 "i_data.ctab:md5,2972a5d6e1b6a5d23b5ed9d03684cd90",
                 "t_data.ctab:md5,dd5375f3f06a92930f462fda2f09477c",
-                "MCF7.coverage.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MCF7.gene.abundance.txt:md5,7361c24854b7738b1ce41eb61970c3dd",
-                "MCF7.transcripts.gtf:md5,94fd0ab295f7e8539a63d720b67c76e3",
                 "versions.yml:md5,746f51a22a333b345638ab0e2accd1bd"
             ]
         ],
@@ -288,6 +277,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.4"
         },
-        "timestamp": "2026-01-12T16:46:20.095635"
+        "timestamp": "2026-01-13T14:43:30.409154"
     }
 }
