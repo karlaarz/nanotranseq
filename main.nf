@@ -28,6 +28,7 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_nano
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 params.fasta = getGenomeAttribute('fasta')
+params.minimap2_index = getGenomeAttribute('minimap2')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +43,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
 
     take:
     samplesheet // channel: samplesheet read in from --input
+    fasta       // channel: fasta read in from --fasta
     direct_rna  // channel: direct_rna read in from --direct_rna
+    minimap2_index  // channel: minimap2_index read in from --minimap2_index
 
     main:
 
@@ -51,7 +54,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     //
     NANOTRANSEQ (
         samplesheet,
-        direct_rna
+        fasta,
+        direct_rna,
+        minimap2_index,
     )
     emit:
     multiqc_report = NANOTRANSEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -75,7 +80,9 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.fasta,
         params.direct_rna,
+        params.minimap2_index,
         params.help,
         params.help_full,
         params.show_hidden
@@ -86,7 +93,9 @@ workflow {
     //
     NFDATAOMICS_NANOTRANSEQ (
         PIPELINE_INITIALISATION.out.samplesheet,
-        PIPELINE_INITIALISATION.out.direct_rna
+        PIPELINE_INITIALISATION.out.fasta,
+        PIPELINE_INITIALISATION.out.direct_rna,
+        PIPELINE_INITIALISATION.out.minimap2_index,
     )
     //
     // SUBWORKFLOW: Run completion tasks
