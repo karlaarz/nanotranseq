@@ -33,6 +33,7 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    direct_rna        // boolean: Boolean whether direct rna sequencing was used
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -81,6 +82,14 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
+    // Create channel from params.direct_rna
+    //
+
+    channel
+        .from(params.direct_rna)
+        .set { ch_direct_rna }
+
+    //
     // Create channel from input file provided through params.input
     //
 
@@ -106,6 +115,7 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     samplesheet = ch_samplesheet
+    direct_rna  = ch_direct_rna
     versions    = ch_versions
 }
 
