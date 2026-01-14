@@ -8,6 +8,13 @@
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "MINIMAP2_ALIGN": {
+                    "minimap2": "2.29-r1283",
+                    "samtools": 1.21
+                },
+                "MINIMAP2_INDEX": {
+                    "minimap2": "2.29-r1283"
+                },
                 "MULTIQC": {
                     "multiqc": 1.32
                 },
@@ -22,6 +29,19 @@
                 }
             },
             [
+                "alignment",
+                "alignment/K562",
+                "alignment/K562/MINIMAP2_ALIGN",
+                "alignment/K562/MINIMAP2_ALIGN/K562.bam",
+                "alignment/K562/MINIMAP2_ALIGN/K562.bam.bai",
+                "alignment/K562/MINIMAP2_ALIGN/versions.yml",
+                "alignment/MCF7",
+                "alignment/MCF7/MINIMAP2_ALIGN",
+                "alignment/MCF7/MINIMAP2_ALIGN/MCF7.bam",
+                "alignment/MCF7/MINIMAP2_ALIGN/MCF7.bam.bai",
+                "alignment/MCF7/MINIMAP2_ALIGN/versions.yml",
+                "minimap2",
+                "minimap2/chr22_1-17550000.mmi",
                 "pipeline_info",
                 "pipeline_info/nanotranseq_software_mqc_versions.yml",
                 "qc",
@@ -151,6 +171,9 @@
                 "qc/raw_reads/MULTIQC/multiqc_report.html"
             ],
             [
+                "versions.yml:md5,c9a13336eec69f5971152da522eff676",
+                "versions.yml:md5,c9a13336eec69f5971152da522eff676",
+                "chr22_1-17550000.mmi:md5,8d3ef72648b862a316f51ce13994543e",
                 "versions.yml:md5,872d4867d758fe9ed64cbd29b5f16c68",
                 "versions.yml:md5,4f94bbbfb8a874d926952effee60149b",
                 "versions.yml:md5,e61f4e44a585370c5c5fa40c1d4ffdcd",
@@ -193,6 +216,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.4"
         },
-        "timestamp": "2026-01-05T15:56:11.737803"
+        "timestamp": "2026-01-12T12:14:49.708018"
     }
 }

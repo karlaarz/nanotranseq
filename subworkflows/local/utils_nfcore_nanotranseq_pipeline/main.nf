@@ -33,7 +33,9 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    fasta             // string: Path to FASTA file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
+    minimap2_index    // string: Path to Minimap2 index
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -82,12 +84,28 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
+    // Create channel from params.fasta
+    //
+    ch_fasta = Channel.value(file(fasta)).map { file ->
+            def meta = file.baseName
+            tuple(meta, file)
+    }
+
+
+    //
     // Create channel from params.direct_rna
     //
 
     channel
         .from(params.direct_rna)
         .set { ch_direct_rna }
+
+    //
+    // Create channel from params.minimap2_index
+    //
+    ch_minimap2_index = minimap2_index ?
+                        Channel.from(file(minimap2_index)) :
+                        Channel.from(file("no_minimap2_index", checkIfExists: false))
 
     //
     // Create channel from input file provided through params.input
@@ -115,7 +133,9 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     samplesheet = ch_samplesheet
+    fasta       = ch_fasta
     direct_rna  = ch_direct_rna
+    minimap2_index = ch_minimap2_index
     versions    = ch_versions
 }
 
