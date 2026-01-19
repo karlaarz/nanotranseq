@@ -3,15 +3,16 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { RAW_READS_QC           } from '../subworkflows/local/raw_read_qc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { DIRECT_RNA_QC          } from '../subworkflows/local/direct_rna_qc/main'
-include { ALIGNMENT              } from '../subworkflows/local/alignment/main'
-include { QUANTIFICATION         } from '../subworkflows/local/quantification/main'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nanotranseq_pipeline'
+include { RAW_READS_QC                    } from '../subworkflows/local/raw_read_qc/main'
+include { MULTIQC                         } from '../modules/nf-core/multiqc/main'
+include { DIRECT_RNA_QC                   } from '../subworkflows/local/direct_rna_qc/main'
+include { ALIGNMENT                       } from '../subworkflows/local/alignment/main'
+include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
+include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
+include { paramsSummaryMap                } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText          } from '../subworkflows/local/utils_nfcore_nanotranseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,6 +26,8 @@ workflow NANOTRANSEQ {
     ch_samplesheet // channel: samplesheet read in from --input
     ch_fasta       // channel: fasta read in from --fasta
     ch_gtf          // channel: gtf file read in from --gtf
+    ch_gene_id      // channel: attributed gene ID in the GTF file
+    ch_gene_attributes     // channel: extra gene attributes in the GTF file
     ch_transcript_fasta     // channel: transcript fasta file read in from --transcript_fasta
     ch_direct_rna // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
@@ -57,36 +60,43 @@ workflow NANOTRANSEQ {
     ch_reads = ch_direct_rna ? DIRECT_RNA_QC.out.reads : ch_samplesheet
 
     //
-    // Run alignment if Salmon is not the selected quantification tool
+    // Run alignment if either `featurecounts` or `both` is selected as quantification tool
     //
-    if (params.quantification_tool != 'salmon') {
+    if (params.quantification_tool == 'featurecounts' || params.quantification_tool == 'both') {
 
-        ALIGNMENT(ch_reads,
-                  ch_fasta,
-                  ch_minimap2_index
-                  )
-
+        // Run alignment with Minimap2
+        ALIGNMENT(
+            ch_reads,
+            ch_fasta,
+            ch_minimap2_index
+        )
         ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
 
-        // Create channel for Alignment's output BAM file
-        ch_bam = ALIGNMENT.out.minimap2_bam
+        // Assemble and quantify
+        STRINGTIE_FEATURECOUNTS(
+            ALIGNMENT.out.minimap2_bam,
+            ch_gtf,
+        )
+        ch_versions = ch_versions.mix(STRINGTIE_FEATURECOUNTS.out.versions)
 
-    } else {
-        ch_bam = Channel.from(tuple([], []))
     }
 
     //
-    // Run quantification
+    // Run pseudoalignment if either `salmon` or `both` is selected as quantification tool
     //
-    QUANTIFICATION(
-        ch_reads,
-        ch_fasta,
-        ch_transcript_fasta,
-        ch_bam,
-        ch_gtf,
-    )
+    if (params.quantification_tool == 'salmon' || params.quantification_tool == 'both') {
 
-    ch_versions = ch_versions.mix(QUANTIFICATION.out.versions)
+        PSEUDOALIGNMENT(
+            ch_reads,
+            ch_fasta,
+            ch_transcript_fasta,
+            ch_gtf,
+            ch_gene_id,
+            ch_gene_attributes,
+        )
+        ch_versions = ch_versions.mix(PSEUDOALIGNMENT.out.versions)
+
+    }
 
     //
     // Collate and save software versions

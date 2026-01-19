@@ -35,6 +35,8 @@ workflow PIPELINE_INITIALISATION {
     input             //  string: Path to input samplesheet
     fasta             // string: Path to FASTA file
     gtf               // string: Path to GTF file
+    gene_id           // string: Gene ID attribute in the GTF file
+    gene_attributes   // string: Extra gene attributes in the GTF file
     transcript_fasta  // string: Path to transcript FASTA file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
     minimap2_index    // string: Path to Minimap2 index
@@ -99,6 +101,16 @@ workflow PIPELINE_INITIALISATION {
     ch_gtf = Channel.value(file(gtf))
 
     //
+    // Create channel from params.gene_id
+    //
+    ch_gene_id = Channel.value(params.gene_id)
+
+    //
+    // Create channel from params.gene_attributes
+    //
+    ch_gene_attributes = Channel.value(params.gene_attributes)
+
+    //
     // Create channel from params.transcript_fasta
     //
     ch_transcript_fasta = transcript_fasta ?
@@ -123,7 +135,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate params.quantification_tool
     //
-    if ( params.quantification_tool != 'featurecounts' && params.quantification_tool != 'salmon' ) {
+    if ( params.quantification_tool != 'featurecounts' && params.quantification_tool != 'salmon' && params.quantification_tool != 'both' ) {
         exit 1, "Invalid quantification tool selected. Use either `featurecounts` or `salmon`"
     }
 
@@ -155,6 +167,8 @@ workflow PIPELINE_INITIALISATION {
     samplesheet = ch_samplesheet
     fasta       = ch_fasta
     gtf         = ch_gtf
+    gene_id     = ch_gene_id
+    gene_attributes = ch_gene_attributes
     transcript_fasta = ch_transcript_fasta
     direct_rna  = ch_direct_rna
     minimap2_index = ch_minimap2_index

@@ -89,6 +89,18 @@
                     "type": "string",
                     "description": "Path to reference GTF file."
                 },
+                "gene_id": {
+                    "type": "string",
+                    "description": "Gene ID attribute in the GTF file (default= gene_id)",
+                    "default": "gene_id",
+                    "fa_icon": "fas fa-dna"
+                },
+                "gene_attributes": {
+                    "type": "string",
+                    "description": "Extra gene attribute(s) in the GTF file, comma-separated for multiple (default= gene_name)",
+                    "default": "gene_name",
+                    "fa_icon": "fas fa-dna"
+                },
                 "transcript_fasta": {
                     "type": "string",
                     "description": "FASTA file containing transcript sequences."
