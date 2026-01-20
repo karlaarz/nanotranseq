@@ -19,6 +19,9 @@ qc/{post_chopper,raw_reads}/**/TOULLIGQC/*Toulligqc-report-*/**
 qc/post_chopper/**/CHOPPER/*.{gz}
 alignment/**/MINIMAP2_ALIGN/*.{bam,bai}
 quantification/featureCounts/*.{txt,summary,tsv}
-quantification/STRINGTIE_MERGE/*.{gtf}
-quantification/samples/**/**/*.{gtf,txt}
+quantification/stringtie_merge/*.{gtf}
+quantification/samples/**/**/*.{gtf,txt,tsv}
+pseudoalignment/salmon/salmon/*.{json,bin,log}
+pseudoalignment/salmon/*.{log,bin,json}
+pseudoalignment/salmon/**/**/*.{log,gz,json}
 pipeline_info/*.{html,json,txt,yml}
