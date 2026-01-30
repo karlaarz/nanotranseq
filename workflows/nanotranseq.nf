@@ -57,7 +57,7 @@ workflow NANOTRANSEQ {
     }
 
     // If cDNA was performed, use CHOPPER's output as reads. If not, use raw data
-    ch_reads = params.direct_rna ? ch_samplesheet : DIRECT_RNA_QC.out.reads 
+    ch_reads = params.direct_rna ? ch_samplesheet : DIRECT_RNA_QC.out.reads
 
     //
     // Run alignment if either `featurecounts` or `both` is selected as quantification tool
