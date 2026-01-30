@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::stringtie=2.2.3
+  - python=3.10.4

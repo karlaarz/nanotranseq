@@ -44,6 +44,11 @@
                     "description": "Path to path containing indexes for Minimap2",
                     "fa_icon": "far fa-copy"
                 },
+                "quantification_tool": {
+                    "type": "string",
+                    "description": "Tool to be used for quantification. Either 'featurecounts' or 'salmon'",
+                    "default": "featurecounts"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -79,6 +84,26 @@
                     "description": "Path to FASTA genome file.",
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
                     "fa_icon": "far fa-file-code"
+                },
+                "gtf": {
+                    "type": "string",
+                    "description": "Path to reference GTF file."
+                },
+                "gene_id": {
+                    "type": "string",
+                    "description": "Gene ID attribute in the GTF file (default= gene_id)",
+                    "default": "gene_id",
+                    "fa_icon": "fas fa-dna"
+                },
+                "gene_attributes": {
+                    "type": "string",
+                    "description": "Extra gene attribute(s) in the GTF file, comma-separated for multiple (default= gene_name)",
+                    "default": "gene_name",
+                    "fa_icon": "fas fa-dna"
+                },
+                "transcript_fasta": {
+                    "type": "string",
+                    "description": "FASTA file containing transcript sequences."
                 },
                 "igenomes_ignore": {
                     "type": "boolean",

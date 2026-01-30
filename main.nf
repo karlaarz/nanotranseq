@@ -28,6 +28,7 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_nano
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 params.fasta = getGenomeAttribute('fasta')
+params.gtf = getGenomeAttribute('gtf')
 params.minimap2_index = getGenomeAttribute('minimap2')
 
 /*
@@ -44,6 +45,10 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     take:
     samplesheet // channel: samplesheet read in from --input
     fasta       // channel: fasta read in from --fasta
+    gtf         // channel: GTF file read in from --gtf
+    gene_id     // channel: attributed gene ID
+    gene_attributes     // channel: extra gene attributes
+    transcript_fasta    // channel: transcript fasta file read in from --transcript_fasta
     direct_rna  // channel: direct_rna read in from --direct_rna
     minimap2_index  // channel: minimap2_index read in from --minimap2_index
 
@@ -55,6 +60,10 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     NANOTRANSEQ (
         samplesheet,
         fasta,
+        gtf,
+        gene_id,
+        gene_attributes,
+        transcript_fasta,
         direct_rna,
         minimap2_index,
     )
@@ -81,6 +90,10 @@ workflow {
         params.outdir,
         params.input,
         params.fasta,
+        params.gtf,
+        params.gene_id,
+        params.gene_attributes,
+        params.transcript_fasta,
         params.direct_rna,
         params.minimap2_index,
         params.help,
@@ -94,6 +107,10 @@ workflow {
     NFDATAOMICS_NANOTRANSEQ (
         PIPELINE_INITIALISATION.out.samplesheet,
         PIPELINE_INITIALISATION.out.fasta,
+        PIPELINE_INITIALISATION.out.gtf,
+        PIPELINE_INITIALISATION.out.gene_id,
+        PIPELINE_INITIALISATION.out.gene_attributes,
+        PIPELINE_INITIALISATION.out.transcript_fasta,
         PIPELINE_INITIALISATION.out.direct_rna,
         PIPELINE_INITIALISATION.out.minimap2_index,
     )
