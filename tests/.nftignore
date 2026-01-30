@@ -24,4 +24,5 @@ quantification/samples/**/**/*.{gtf,txt,tsv}
 pseudoalignment/salmon/salmon/*.{json,bin,log}
 pseudoalignment/salmon/*.{log,bin,json}
 pseudoalignment/salmon/**/**/*.{log,gz,json}
+pseudoalignment/merged_results/*.{tsv}
 pipeline_info/*.{html,json,txt,yml}

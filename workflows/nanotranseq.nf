@@ -45,8 +45,8 @@ workflow NANOTRANSEQ {
     ch_versions = ch_versions.mix(RAW_READS_QC.out.versions)
 
     //
-    // Run Chopper if direct RNA sequencing was performed
-    if (ch_direct_rna) {
+    // Run Chopper if cDNA sequencing was performed
+    if (!params.direct_rna) {
 
         DIRECT_RNA_QC (
             ch_samplesheet,
@@ -56,8 +56,8 @@ workflow NANOTRANSEQ {
 
     }
 
-    // If direct RNA was performed, use CHOPPER's output as reads. If not, use raw data
-    ch_reads = ch_direct_rna ? DIRECT_RNA_QC.out.reads : ch_samplesheet
+    // If cDNA was performed, use CHOPPER's output as reads. If not, use raw data
+    ch_reads = params.direct_rna ? ch_samplesheet : DIRECT_RNA_QC.out.reads 
 
     //
     // Run alignment if either `featurecounts` or `both` is selected as quantification tool
@@ -74,6 +74,7 @@ workflow NANOTRANSEQ {
 
         // Assemble and quantify
         STRINGTIE_FEATURECOUNTS(
+            ch_fasta,
             ALIGNMENT.out.minimap2_bam,
             ch_gtf,
         )

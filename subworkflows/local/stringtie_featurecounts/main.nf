@@ -1,4 +1,4 @@
-include { STRINGTIE_STRINGTIE } from '../../../modules/nf-core/stringtie/stringtie/main'
+include { STRINGTIE2 } from '../../../modules/local/stringtie2/main'
 include { STRINGTIE_MERGE      } from '../../../modules/nf-core/stringtie/merge/main'
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_GENES } from '../../../modules/nf-core/subread/featurecounts/main'
 include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_TRANSCRIPTS } from '../../../modules/nf-core/subread/featurecounts/main'
@@ -6,6 +6,7 @@ include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_TRANSCRIPTS } from '../
 workflow STRINGTIE_FEATURECOUNTS {
 
     take:
+    fasta                           // channel: reference FASTA: path(fasta)
     bam                             // channel: output from ALIGNMENT: val(meta), path(bam)
     reference_gtf                   // channel: reference GTF: path(gtf)
 
@@ -19,14 +20,22 @@ workflow STRINGTIE_FEATURECOUNTS {
     //
     // Run Stringtie
     //
-    STRINGTIE_STRINGTIE(
-        bam,
-        reference_gtf,
-    )
-    versions = versions.mix(STRINGTIE_STRINGTIE.out.versions)
+    fasta_file = fasta.map { it[1] }
 
-    // Create channel for stringtie_stringtie output
-    stringtie_gtf = STRINGTIE_STRINGTIE.out.transcript_gtf.collect{it[1]}
+    stringtie2_input = bam
+        .combine(fasta_file)
+        .combine(reference_gtf)
+        .map { meta, bam_file, fasta, gtf ->
+            tuple(meta, fasta, gtf, bam_file)
+        }
+    
+    STRINGTIE2(
+        stringtie2_input
+    )
+    versions = versions.mix(STRINGTIE2.out.versions)
+
+    // Create channel for stringtie2 output
+    stringtie_gtf = STRINGTIE2.out.stringtie_gtf.collect{it}
 
     //
     // Merge Stringtie results
