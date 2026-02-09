@@ -29,40 +29,40 @@ merged_files <- list.files(pattern = merged_file_pattern)
 
 if (length(merged_files) > 0) {
     message("Detected merged count file: ", merged_files[1])
-    
+
     # Read the merged file
     # Format from tximport usually: tx_id, gene_id, sample1, sample2, ...
     d_merged <- read.table(merged_files[1], header=TRUE, sep="\t", stringsAsFactors=FALSE, check.names=FALSE)
-    
+
     # Verify we have tx and gene columns
     # We assume first two columns are tx and gene info
     counts <- d_merged
-    
+
     # Rename first two columns to match DRIMSeq expectations if needed
     # But DRIMSeq needs a specific data frame structure.
     # The columns should match the sample_ids in design file.
-    
+
     # Check if all sample_ids from design are in the columns
     missing_cols <- setdiff(samples\$sample_id, colnames(counts))
     if (length(missing_cols) > 0) {
         stop("The merged count file is missing columns for samples: ", paste(missing_cols, collapse=", "))
     }
-    
+
     # We need to construct the counts data frame for dmDSdata
     # It requires: gene_id, feature_id, sample1, sample2...
     # Assuming col 1 is feature_id (tx), col 2 is gene_id
-    
+
     # Rename first two cols for clarity
     colnames(counts)[1] <- "feature_id"
     colnames(counts)[2] <- "gene_id"
-    
+
     # Select only relevant columns
     counts <- counts[, c("gene_id", "feature_id", samples\$sample_id)]
-    
+
 } else {
     # Fallback to individual file logic
     message("Assuming individual files per sample...")
-    
+
     # Match files to samples
     sample_files <- sapply(samples\$sample_id, function(sid) {
         sid_regex <- paste0("^", sid, ".*transcript_counts[.]tsv\$")
@@ -92,11 +92,11 @@ if (length(merged_files) > 0) {
         sid <- samples\$sample_id[i]
         f <- sample_files[i]
         d <- read.table(f, header=TRUE, sep="\t", stringsAsFactors=FALSE)
-        
+
         if (!identical(d[,1], counts\$feature_id)) {
             d <- d[match(counts\$feature_id, d[,1]), ]
         }
-        
+
         counts[[sid]] <- d[, 3]
     }
 }
@@ -130,12 +130,12 @@ if (is.null(d_filtered)) {
     write.csv(data.frame(), "drimseq_gene_results.csv")
     write.csv(data.frame(), "drimseq_transcript_results.csv")
     saveRDS(d, "drimseq_object.rds") # Save unfiltered object
-    
+
     # Create dummy plot
     pdf("drimseq_plots.pdf")
     plot(1, 1, main="No genes left after filtering")
     dev.off()
-    
+
     # Versions
     r_version <- paste(R.version\$major, R.version\$minor, sep=".")
     drimseq_version <- as.character(packageVersion('DRIMSeq'))
@@ -145,7 +145,7 @@ if (is.null(d_filtered)) {
         '    bioconductor-drimseq: ', drimseq_version, '\n'
     )
     writeLines(versions_text, "versions.yml")
-    
+
     quit(save="no", status=0)
 }
 
@@ -159,7 +159,7 @@ if (n_samples < 2 || length(unique(samples\$condition)) < 2) {
     pdf("drimseq_plots.pdf")
     plotData(d)
     dev.off()
-    
+
     # Create empty result files to prevent process failure
     write.csv(data.frame(), "drimseq_gene_results.csv")
     write.csv(data.frame(), "drimseq_transcript_results.csv")
@@ -173,42 +173,42 @@ if (n_samples < 2 || length(unique(samples\$condition)) < 2) {
         '    bioconductor-drimseq: ', drimseq_version, '\n'
     )
     writeLines(versions_text, "versions.yml")
-    
+
 } else {
         design_full <- model.matrix(~ condition, data = samples(d))
-    
+
         tryCatch({
             # Run DRIMSeq
             set.seed(123)
             d <- dmPrecision(d, design = design_full)
             d <- dmFit(d, design = design_full)
-        
+
             # Test for condition
             coef_name <- colnames(design_full)[2]
             d <- dmTest(d, coef = coef_name)
-        
+
             # Results
             res <- results(d)
             res_tx <- results(d, level = "feature")
-        
+
             # Write results
             write.csv(res, "drimseq_gene_results.csv", row.names=FALSE)
             write.csv(res_tx, "drimseq_transcript_results.csv", row.names=FALSE)
             saveRDS(d, "drimseq_object.rds")
-        
+
             # Plotting
             pdf("drimseq_plots.pdf")
             plotPrecision(d)
             dev.off()
-            
+
         }, error = function(e) {
             message("DRIMSeq statistical testing failed: ", e\$message)
             message("Saving empty results.")
-            
+
             write.csv(data.frame(), "drimseq_gene_results.csv")
             write.csv(data.frame(), "drimseq_transcript_results.csv")
             saveRDS(d, "drimseq_object.rds")
-            
+
             # Create dummy plot
             pdf("drimseq_plots.pdf")
             plot(1, 1, main="Testing failed")
