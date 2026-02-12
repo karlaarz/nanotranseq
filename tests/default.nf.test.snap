@@ -281,9 +281,9 @@
                 "versions.yml:md5,c9a13336eec69f5971152da522eff676",
                 "drimseq_gene_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
                 "drimseq_object.rds:md5,9729e140c2e2c767229701e3a35bfb5e",
-                "drimseq_plots.pdf:md5,e0c2211185700be2f9529c2c5795c868",
+                "drimseq_plots.pdf:md5,11b407aa184f6f08f5815b33242321a6",
                 "drimseq_transcript_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
-                "isoform_switch_plots.pdf:md5,9061185cd37390b2b6839b669a093879",
+                "isoform_switch_plots.pdf:md5,685c11ce8e6fa186036e8a997c861fb4",
                 "isoform_switch_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
                 "isoform_switch_results.rds:md5,301332f37b5626ed96769c3c81dd5687",
                 "versions.yml:md5,448794fb31df3ba226d40d59fa932eb4",
@@ -327,7 +327,7 @@
                 "versions.yml:md5,75b1c1af89a44d8417941f1015d918fe",
                 "versions.yml:md5,39e87f423a86633bd64ecd9c809e1618",
                 "versions.yml:md5,b64fa8567956fdcd04a134e25689ff6b",
-                "versions.yml:md5,928206836970bfebc6073c99878c0932",
+                "versions.yml:md5,7e2bf0c8a9a9d2adf18384c5b481cdeb",
                 "versions.yml:md5,c21fb403d93e24e638aefd8fd06c997e",
                 "versions.yml:md5,c21fb403d93e24e638aefd8fd06c997e",
                 "versions.yml:md5,c21fb403d93e24e638aefd8fd06c997e",
@@ -338,6 +338,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-09T16:02:36.813872"
+        "timestamp": "2026-02-12T11:09:33.971616"
     }
 }
