@@ -281,9 +281,9 @@
                 "versions.yml:md5,c9a13336eec69f5971152da522eff676",
                 "drimseq_gene_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
                 "drimseq_object.rds:md5,9729e140c2e2c767229701e3a35bfb5e",
-                "drimseq_plots.pdf:md5,11b407aa184f6f08f5815b33242321a6",
+                "drimseq_plots.pdf:md5,086a53e26150f6c45581df2243cc4999",
                 "drimseq_transcript_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
-                "isoform_switch_plots.pdf:md5,685c11ce8e6fa186036e8a997c861fb4",
+                "isoform_switch_plots.pdf:md5,d5f595effe27a89335937eb6cf2810a8",
                 "isoform_switch_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
                 "isoform_switch_results.rds:md5,301332f37b5626ed96769c3c81dd5687",
                 "versions.yml:md5,448794fb31df3ba226d40d59fa932eb4",
@@ -336,8 +336,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-02-12T11:09:33.971616"
+        "timestamp": "2026-02-20T11:27:53.206726"
     }
 }

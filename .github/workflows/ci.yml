@@ -1,0 +1,15 @@
+name: CI con comentario PR
+on: [pull_request]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Agregar comentario al PR
+        uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc
+        with:
+          repo-token: ${{ github.token }}
+          
