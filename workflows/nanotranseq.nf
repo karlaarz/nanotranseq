@@ -9,6 +9,7 @@ include { DIRECT_RNA_QC                   } from '../subworkflows/local/direct_r
 include { ALIGNMENT                       } from '../subworkflows/local/alignment/main'
 include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
 include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
+include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
 include { paramsSummaryMap                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -96,6 +97,18 @@ workflow NANOTRANSEQ {
             ch_gene_attributes,
         )
         ch_versions = ch_versions.mix(PSEUDOALIGNMENT.out.versions)
+
+        //
+        // SUBWORKFLOW: Transcript Usage
+        //
+        TRANSCRIPT_USAGE(
+            PSEUDOALIGNMENT.out.counts_transcript,
+            PSEUDOALIGNMENT.out.tpm_transcript,
+            ch_fasta.map{ it[1] },
+            ch_gtf,
+            ch_reads
+        )
+        ch_versions = ch_versions.mix(TRANSCRIPT_USAGE.out.versions)
 
     }
 

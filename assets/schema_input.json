@@ -13,12 +13,28 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
+            "replicate": {
+                "type": "integer",
+                "errorMessage": "Replicate must be an integer",
+                "meta": ["replicate"]
+            },
+            "barcode": {
+                "type": "string",
+                "errorMessage": "Barcode must be provided if applicable",
+                "meta": ["barcode"]
+            },
             "fastq_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "condition": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Condition must be provided and cannot contain spaces",
+                "meta": ["condition"]
             },
             "fastq_2": {
                 "type": "string",
@@ -28,6 +44,6 @@
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "fastq_1", "condition"]
     }
 }

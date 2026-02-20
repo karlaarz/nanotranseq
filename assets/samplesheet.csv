@@ -1,3 +1,4 @@
-sample,fastq_1,fastq_2
-SAMPLE_PAIRED_END,/path/to/fastq/files/AEG588A1_S1_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A1_S1_L002_R2_001.fastq.gz
-SAMPLE_SINGLE_END,/path/to/fastq/files/AEG588A4_S4_L003_R1_001.fastq.gz,
+sample,replicate,barcode,fastq_1,condition
+MCF7,1,,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fastq/demultiplexed/quantification/stringtie/MCF7_directcDNA_replicate1.fastq.gz,treatment
+K562,2,,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fastq/demultiplexed/quantification/stringtie/K562_directcDNA_replicate4.fastq.gz,control
+Q562,2,,https://raw.githubusercontent.com/nf-core/test-datasets/nanoseq/fastq/demultiplexed/quantification/stringtie/K562_directcDNA_replicate1.fastq.gz,control
