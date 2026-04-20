@@ -5,6 +5,11 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "bedtools/bamtobed": {
+                        "branch": "master",
+                        "git_sha": "88d43dad73a675e66bff49ebb57fe657a5909018",
+                        "installed_by": ["modules"]
+                    },
                     "bedtools/genomecov": {
                         "branch": "master",
                         "git_sha": "88d43dad73a675e66bff49ebb57fe657a5909018",
@@ -93,6 +98,11 @@
                         "installed_by": ["modules"]
                     },
                     "ucsc/bedgraphtobigwig": {
+                        "branch": "master",
+                        "git_sha": "b1c64e862fb5ed7f13b6f8f3ef8f04e700d41438",
+                        "installed_by": ["modules"]
+                    },
+                    "ucsc/bedtobigbed": {
                         "branch": "master",
                         "git_sha": "b1c64e862fb5ed7f13b6f8f3ef8f04e700d41438",
                         "installed_by": ["modules"]

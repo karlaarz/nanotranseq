@@ -79,7 +79,6 @@ workflow NANOTRANSEQ {
             ch_fasta,
             ALIGNMENT.out.minimap2_bam
         )
-        ch_versions = ch_versions.mix(BEDTOOLS_BIGWIG.out.versions)
 
         // Assemble and quantify
         STRINGTIE_FEATURECOUNTS(
