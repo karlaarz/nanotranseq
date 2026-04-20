@@ -7,6 +7,7 @@ include { RAW_READS_QC                    } from '../subworkflows/local/raw_read
 include { MULTIQC                         } from '../modules/nf-core/multiqc/main'
 include { DIRECT_RNA_QC                   } from '../subworkflows/local/direct_rna_qc/main'
 include { ALIGNMENT                       } from '../subworkflows/local/alignment/main'
+include { BEDTOOLS_BIGWIG                 } from '../subworkflows/local/bedtools_bigwig/main'
 include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
 include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
 include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
@@ -72,6 +73,13 @@ workflow NANOTRANSEQ {
             ch_minimap2_index
         )
         ch_versions = ch_versions.mix(ALIGNMENT.out.versions)
+
+        // Generate BigWig files for visualisation in genome browsers
+        BEDTOOLS_BIGWIG(
+            ch_fasta,
+            ALIGNMENT.out.minimap2_bam
+        )
+        ch_versions = ch_versions.mix(BEDTOOLS_BIGWIG.out.versions)
 
         // Assemble and quantify
         STRINGTIE_FEATURECOUNTS(
