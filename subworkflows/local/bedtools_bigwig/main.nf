@@ -1,4 +1,4 @@
-include { SAMTOOLS_FAIDX                } from '../../../modules/nf-core/samtools/faidx/main' 
+include { SAMTOOLS_FAIDX                } from '../../../modules/nf-core/samtools/faidx/main'
 include { BEDTOOLS_GENOMECOV            } from '../../../modules/nf-core/bedtools/genomecov/main'
 include { UCSC_BEDGRAPHTOBIGWIG         } from '../../../modules/nf-core/ucsc/bedgraphtobigwig/main'
 
