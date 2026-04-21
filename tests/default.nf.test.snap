@@ -2,6 +2,12 @@
     "-profile test": {
         "content": [
             {
+                "BEDTOOLS_BAMTOBED": {
+                    "bedtools": "2.31.1"
+                },
+                "BEDTOOLS_GENOMECOV": {
+                    "bedtools": "2.31.1"
+                },
                 "CUSTOM_TX2GENE": {
                     "python": "3.10.4"
                 },
@@ -35,6 +41,9 @@
                 "SALMON_QUANT": {
                     "salmon": "1.10.3"
                 },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.23.1"
+                },
                 "STRINGTIE2": {
                     "stringtie2": "2.1.4"
                 },
@@ -52,6 +61,12 @@
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
+                },
+                "UCSC_BEDGRAPHTOBIGWIG": {
+                    "ucsc": 482
+                },
+                "UCSC_BEDTOBIGBED": {
+                    "ucsc": 482
                 },
                 "Workflow": {
                     "nfdata-omics/nanotranseq": "v1.0.0dev"
@@ -73,6 +88,25 @@
                 "alignment/Q562/MINIMAP2_ALIGN",
                 "alignment/Q562/MINIMAP2_ALIGN/Q562.bam",
                 "alignment/Q562/MINIMAP2_ALIGN/Q562.bam.bai",
+                "alignment/bedtools_bamtobed",
+                "alignment/bedtools_bamtobed/K562.bed",
+                "alignment/bedtools_bamtobed/MCF7.bed",
+                "alignment/bedtools_bamtobed/Q562.bed",
+                "alignment/bedtools_genomecov",
+                "alignment/bedtools_genomecov/K562.bedGraph",
+                "alignment/bedtools_genomecov/MCF7.bedGraph",
+                "alignment/bedtools_genomecov/Q562.bedGraph",
+                "alignment/samtools_faidx",
+                "alignment/samtools_faidx/chr22_1-17550000.fa.fai",
+                "alignment/samtools_faidx/chr22_1-17550000.fa.sizes",
+                "alignment/ucsc_bedgraphtobigwig",
+                "alignment/ucsc_bedgraphtobigwig/K562.bigWig",
+                "alignment/ucsc_bedgraphtobigwig/MCF7.bigWig",
+                "alignment/ucsc_bedgraphtobigwig/Q562.bigWig",
+                "alignment/ucsc_bedtobigbed",
+                "alignment/ucsc_bedtobigbed/K562.bigBed",
+                "alignment/ucsc_bedtobigbed/MCF7.bigBed",
+                "alignment/ucsc_bedtobigbed/Q562.bigBed",
                 "pipeline_info",
                 "pipeline_info/nanotranseq_software_mqc_versions.yml",
                 "pseudoalignment",
@@ -259,6 +293,20 @@
             ],
             [
                 "chr22_1-17550000.mmi:md5,8d3ef72648b862a316f51ce13994543e",
+                "K562.bed:md5,ff0c659f60677beb5d7d3a14583ad77c",
+                "MCF7.bed:md5,cc372c7063169f2033acdb7ade2d8f6a",
+                "Q562.bed:md5,035a3213f2b4a0c862b4f42171bf7402",
+                "K562.bedGraph:md5,a8e0fc3f472bba9aa7015977020fcd8b",
+                "MCF7.bedGraph:md5,65b40c702e20b57d4e3ede0e45bf67ff",
+                "Q562.bedGraph:md5,9f3b750bd1e581482618366af68d557c",
+                "chr22_1-17550000.fa.fai:md5,33fd5556fae489d95e6b0cfbe16de06b",
+                "chr22_1-17550000.fa.sizes:md5,c1fa1d2bb6200cb6eef78902671328ba",
+                "K562.bigWig:md5,27d8e1bf53247174934f32b07e317ca2",
+                "MCF7.bigWig:md5,17750bea71740d6355dddc00c681f841",
+                "Q562.bigWig:md5,f8822a88538ea3f3837a226b226cc8b5",
+                "K562.bigBed:md5,5ee3d52a45a3d151e90a4cab149f97f7",
+                "MCF7.bigBed:md5,2d8814333e839901893bfeae4b61b61a",
+                "Q562.bigBed:md5,3facdb7901f8f6dfdfea542fe7364a0c",
                 "ambig_info.tsv:md5,a608a0af74fbd1986bc7f3a5e43a7643",
                 "cmd_info.json:md5,3492dc0f3ac782e26f6272b0ddec7cbe",
                 "flenDist.txt:md5,2de170bdc9f6fd237d286429b292bb28",
@@ -297,9 +345,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-20T12:32:26.702347"
+        "timestamp": "2026-04-20T16:41:46.827237"
     }
 }
