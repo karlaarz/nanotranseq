@@ -51,6 +51,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
     transcript_fasta    // channel: transcript fasta file read in from --transcript_fasta
     direct_rna  // channel: direct_rna read in from --direct_rna
     minimap2_index  // channel: minimap2_index read in from --minimap2_index
+    formula       // channel: formula read in from --deseq2_formula
+    comparison    // channel: comparison read in from --deseq2_comparison
+    fdr_threshold // channel: fdr_threshold read in from --deseq2_fdr_threshold
 
     main:
 
@@ -66,6 +69,9 @@ workflow NFDATAOMICS_NANOTRANSEQ {
         transcript_fasta,
         direct_rna,
         minimap2_index,
+        formula,
+        comparison,
+        fdr_threshold
     )
     emit:
     multiqc_report = NANOTRANSEQ.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -96,6 +102,9 @@ workflow {
         params.transcript_fasta,
         params.direct_rna,
         params.minimap2_index,
+        params.deseq2_formula,
+        params.deseq2_comparisons,
+        params.deseq2_fdr,
         params.help,
         params.help_full,
         params.show_hidden
@@ -113,6 +122,9 @@ workflow {
         PIPELINE_INITIALISATION.out.transcript_fasta,
         PIPELINE_INITIALISATION.out.direct_rna,
         PIPELINE_INITIALISATION.out.minimap2_index,
+        PIPELINE_INITIALISATION.out.formula,
+        PIPELINE_INITIALISATION.out.comparison,
+        PIPELINE_INITIALISATION.out.fdr_threshold
     )
     //
     // SUBWORKFLOW: Run completion tasks

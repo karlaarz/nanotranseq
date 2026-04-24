@@ -49,6 +49,23 @@
                     "description": "Tool to be used for quantification. Either 'featurecounts' or 'salmon'",
                     "default": "featurecounts"
                 },
+                "deseq2_comparisons": {
+                    "type": "string",
+                    "description": "Comparisons to be performed with DESeq2"
+                },
+                "deseq2_group": {
+                    "type": "string",
+                    "description": "Metadata column to perform differential analysis on"
+                },
+                "deseq2_formula": {
+                    "type": "string",
+                    "description": "Formula to use during differential analysis"
+                },
+                "deseq2_fdr": {
+                    "type": "number",
+                    "description": "FDR to be used during differential analysis",
+                    "default": 0.05
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

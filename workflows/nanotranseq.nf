@@ -9,6 +9,7 @@ include { DIRECT_RNA_QC                   } from '../subworkflows/local/direct_r
 include { ALIGNMENT                       } from '../subworkflows/local/alignment/main'
 include { BEDTOOLS_BIGWIG                 } from '../subworkflows/local/bedtools_bigwig/main'
 include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
+include { DIFFERENTIAL_ANALYSIS           } from '../subworkflows/nfdata-omics/deseq2_analysis/main'
 include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
 include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
 include { paramsSummaryMap                } from 'plugin/nf-schema'
@@ -33,6 +34,9 @@ workflow NANOTRANSEQ {
     ch_transcript_fasta     // channel: transcript fasta file read in from --transcript_fasta
     ch_direct_rna // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
+    ch_formula       // channel: formula read in from --deseq2_formula
+    ch_comparison    // channel: comparison read in from --deseq2_comparison
+    ch_fdr_threshold // channel: fdr_threshold read in from --deseq2_fdr_threshold
 
     main:
 
@@ -88,6 +92,45 @@ workflow NANOTRANSEQ {
         )
         ch_versions = ch_versions.mix(STRINGTIE_FEATURECOUNTS.out.versions)
 
+        // Create metadata for DESeq2
+        ch_metadata = channel
+            .fromPath(params.input)
+            .map { samplesheet ->
+                def metadata = file('metadata.tsv')
+                metadata.text = samplesheet.text.readLines()
+                    .collect { row -> row.replace(',', '\t') }
+                    .join('\n') + '\n'
+                tuple([id: 'deseq2'], metadata)
+            }
+
+        // Create counts file for DESeq2
+        STRINGTIE_FEATURECOUNTS.out.featurecounts_genes_out
+            .map { meta, featurecounts_file ->
+                def counts_file = file(featurecounts_file.baseName + '_for_deseq2.tsv')
+                def lines = featurecounts_file.text.readLines()
+        
+                // Remove comment line if present
+                if (lines[0].startsWith('#')) lines = lines[1..-1]
+        
+                // Remove unnecessary columns and strip '.bam' suffix from header
+                counts_file.text = lines.collect { line ->
+                    def cols = line.split('\t') as List
+                    def row = ([cols[0]] + cols[6..-1]).join('\t')
+                    line == lines[0] ? row.replaceAll('\\.bam', '') : row
+                }.join('\n') + '\n'
+        
+                tuple([id: meta], counts_file)
+            }
+            .set { ch_counts_for_deseq2 }
+
+        // Differential analysis
+        DIFFERENTIAL_ANALYSIS(
+            ch_counts_for_deseq2,
+            ch_metadata,
+            ch_formula,
+            ch_comparison,
+            ch_fdr_threshold
+        )
     }
 
     //
