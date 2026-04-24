@@ -108,17 +108,17 @@ workflow NANOTRANSEQ {
             .map { meta, featurecounts_file ->
                 def counts_file = file(featurecounts_file.baseName + '_for_deseq2.tsv')
                 def lines = featurecounts_file.text.readLines()
-        
+
                 // Remove comment line if present
                 if (lines[0].startsWith('#')) lines = lines[1..-1]
-        
+
                 // Remove unnecessary columns and strip '.bam' suffix from header
                 counts_file.text = lines.collect { line ->
                     def cols = line.split('\t') as List
                     def row = ([cols[0]] + cols[6..-1]).join('\t')
                     line == lines[0] ? row.replaceAll('\\.bam', '') : row
                 }.join('\n') + '\n'
-        
+
                 tuple([id: meta], counts_file)
             }
             .set { ch_counts_for_deseq2 }

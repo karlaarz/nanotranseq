@@ -53,10 +53,6 @@
                     "type": "string",
                     "description": "Comparisons to be performed with DESeq2"
                 },
-                "deseq2_group": {
-                    "type": "string",
-                    "description": "Metadata column to perform differential analysis on"
-                },
                 "deseq2_formula": {
                     "type": "string",
                     "description": "Formula to use during differential analysis"
