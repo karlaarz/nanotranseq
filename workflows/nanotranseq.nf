@@ -96,7 +96,7 @@ workflow NANOTRANSEQ {
         ch_metadata = channel
             .fromPath(params.input)
             .map { samplesheet ->
-                def metadata = file('metadata.tsv')
+                def metadata = file(workDir + '/metadata.tsv')
                 metadata.text = samplesheet.text.readLines()
                     .collect { row -> row.replace(',', '\t') }
                     .join('\n') + '\n'
@@ -106,7 +106,7 @@ workflow NANOTRANSEQ {
         // Create counts file for DESeq2
         STRINGTIE_FEATURECOUNTS.out.featurecounts_genes_out
             .map { meta, featurecounts_file ->
-                def counts_file = file(featurecounts_file.baseName + '_for_deseq2.tsv')
+                def counts_file = file(workDir + '/counts_for_deseq2.tsv')
                 def lines = featurecounts_file.text.readLines()
 
                 // Remove comment line if present
