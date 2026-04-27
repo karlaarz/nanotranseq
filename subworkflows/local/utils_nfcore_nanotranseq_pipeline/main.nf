@@ -40,6 +40,9 @@ workflow PIPELINE_INITIALISATION {
     transcript_fasta  // string: Path to transcript FASTA file
     direct_rna        // boolean: Boolean whether direct rna sequencing was used
     minimap2_index    // string: Path to Minimap2 index
+    formula           // string: DESeq2 formula
+    comparison        // string: DESeq2 comparison
+    fdr_threshold     // string: DESeq2 FDR threshold
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -163,6 +166,21 @@ workflow PIPELINE_INITIALISATION {
         }
         .set { ch_samplesheet }
 
+    //
+    // Create channel from params.formula
+    //
+    ch_formula = params.deseq2_formula ? channel.value(params.deseq2_formula) : channel.empty()
+
+    //
+    // Create channel from params.comparison
+    //
+    ch_comparison = params.deseq2_comparisons ? channel.value(params.deseq2_comparisons) : channel.empty()
+
+    //
+    // Create channel from params.fdr_threshold
+    //
+    ch_fdr_threshold = params.deseq2_fdr ? channel.value(params.deseq2_fdr) : channel.empty()
+
     emit:
     samplesheet = ch_samplesheet
     fasta       = ch_fasta
@@ -172,6 +190,9 @@ workflow PIPELINE_INITIALISATION {
     transcript_fasta = ch_transcript_fasta
     direct_rna  = ch_direct_rna
     minimap2_index = ch_minimap2_index
+    formula     = ch_formula
+    comparison  = ch_comparison
+    fdr_threshold = ch_fdr_threshold
     versions    = ch_versions
 }
 
