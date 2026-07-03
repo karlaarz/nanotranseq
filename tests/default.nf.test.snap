@@ -18,6 +18,15 @@
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "FILTER_GFFCOMPARE_CLASSES": {
+                    "python": "3.11.9"
+                },
+                "GFFCOMPARE_NOVEL_TRANSCRIPTS": {
+                    "gffcompare": "0.12.6"
+                },
+                "GFFREAD_NOVEL_TRANSCRIPTS": {
+                    "gffread": "0.12.7"
+                },
                 "ISOFORM_SWITCH": {
                     "r-base": "4.4.2",
                     "bioconductor-isoformswitchanalyzer": "2.6.0"
@@ -107,6 +116,20 @@
                 "alignment/ucsc_bedtobigbed/K562.bigBed",
                 "alignment/ucsc_bedtobigbed/MCF7.bigBed",
                 "alignment/ucsc_bedtobigbed/Q562.bigBed",
+                "novel_transcripts",
+                "novel_transcripts/filter_gffcompare_classes",
+                "novel_transcripts/filter_gffcompare_classes/novel_transcripts.class_summary.tsv",
+                "novel_transcripts/filter_gffcompare_classes/novel_transcripts.novel.gtf",
+                "novel_transcripts/filter_gffcompare_classes/novel_transcripts.novel.tmap",
+                "novel_transcripts/gffcompare",
+                "novel_transcripts/gffcompare/novel_transcripts.annotated.gtf",
+                "novel_transcripts/gffcompare/novel_transcripts.loci",
+                "novel_transcripts/gffcompare/novel_transcripts.stats",
+                "novel_transcripts/gffcompare/novel_transcripts.stringtie.merged.gtf.refmap",
+                "novel_transcripts/gffcompare/novel_transcripts.stringtie.merged.gtf.tmap",
+                "novel_transcripts/gffcompare/novel_transcripts.tracking",
+                "novel_transcripts/gffread",
+                "novel_transcripts/gffread/novel_transcripts.fasta",
                 "pipeline_info",
                 "pipeline_info/nanotranseq_software_mqc_versions.yml",
                 "pseudoalignment",
@@ -307,6 +330,15 @@
                 "K562.bigBed:md5,5ee3d52a45a3d151e90a4cab149f97f7",
                 "MCF7.bigBed:md5,2d8814333e839901893bfeae4b61b61a",
                 "Q562.bigBed:md5,3facdb7901f8f6dfdfea542fe7364a0c",
+                "novel_transcripts.class_summary.tsv:md5,fe04e39581f146469c2948bf35fa3156",
+                "novel_transcripts.novel.tmap:md5,bc8e3f756d20fd1a585d30e32cfa6de2",
+                "novel_transcripts.annotated.gtf:md5,178927b5b61676d1bbfff1e03d25cb19",
+                "novel_transcripts.loci:md5,62d0a8181c8a9929682a44a43ee71d5b",
+                "novel_transcripts.stats:md5,b4cb89bfd1d1f0e15e7a064c408020d1",
+                "novel_transcripts.stringtie.merged.gtf.refmap:md5,307dcf4172002074d55e778d5ead6cb4",
+                "novel_transcripts.stringtie.merged.gtf.tmap:md5,c09cfedc0afff805fa4b8f820fe6b35f",
+                "novel_transcripts.tracking:md5,368d37c94b50aa9d05b9c3c4213d4e17",
+                "novel_transcripts.fasta:md5,a79010864cf8a0baa992932267f47dfe",
                 "ambig_info.tsv:md5,a608a0af74fbd1986bc7f3a5e43a7643",
                 "cmd_info.json:md5,3492dc0f3ac782e26f6272b0ddec7cbe",
                 "flenDist.txt:md5,2de170bdc9f6fd237d286429b292bb28",
@@ -345,9 +377,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-04-20T16:41:46.827237"
+        "timestamp": "2026-07-03T11:41:48.059051"
     }
 }

@@ -1,7 +1,7 @@
-include { STRINGTIE2 } from '../../../modules/local/stringtie2/main'
-include { STRINGTIE_MERGE      } from '../../../modules/nf-core/stringtie/merge/main'
-include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_GENES } from '../../../modules/nf-core/subread/featurecounts/main'
-include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_TRANSCRIPTS } from '../../../modules/nf-core/subread/featurecounts/main'
+include { STRINGTIE2                                                    } from '../../../modules/local/stringtie2/main'
+include { STRINGTIE_MERGE                                               } from '../../../modules/nf-core/stringtie/merge/main'
+include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_GENES          } from '../../../modules/nf-core/subread/featurecounts/main'
+include { SUBREAD_FEATURECOUNTS as SUBREAD_FEATURECOUNTS_TRANSCRIPTS    } from '../../../modules/nf-core/subread/featurecounts/main'
 
 workflow STRINGTIE_FEATURECOUNTS {
 
@@ -34,14 +34,15 @@ workflow STRINGTIE_FEATURECOUNTS {
     )
     versions = versions.mix(STRINGTIE2.out.versions)
 
-    // Create channel for stringtie2 output
-    stringtie_gtf = STRINGTIE2.out.stringtie_gtf.collect{it}
+    // Create channel for StringTie per-sample output
+    stringtie_gtf = STRINGTIE2.out.stringtie_gtf
+    stringtie_gtf_for_merge = stringtie_gtf.collect{it}
 
     //
     // Merge Stringtie results
     //
     STRINGTIE_MERGE(
-        stringtie_gtf,
+        stringtie_gtf_for_merge,
         reference_gtf,
     )
     versions = versions.mix(STRINGTIE_MERGE.out.versions)
@@ -79,6 +80,8 @@ workflow STRINGTIE_FEATURECOUNTS {
     emit:
     versions
 
+    stringtie_gtf
+    merged_gtf
     featurecounts_genes_out
     featurecounts_transcripts_out
 }

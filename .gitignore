@@ -1,6 +1,9 @@
 .nextflow*
 work/
 data/
+!tests/data/
+!tests/data/coding_potential/
+!tests/data/coding_potential/**
 results/
 .DS_Store
 testing/

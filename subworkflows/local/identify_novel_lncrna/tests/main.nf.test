@@ -1,0 +1,54 @@
+nextflow_workflow {
+
+    name "Test IDENTIFY_NOVEL_PROTEIN_CODING subworkflow"
+    script "../main.nf"
+    workflow "IDENTIFY_NOVEL_PROTEIN_CODING"
+
+    tag "identify_novel_protein_coding"
+    tag "coding_potential"
+    tag "subworkflow"
+
+    test("stub-run coding potential subworkflow") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id: 'novel_transcripts' ],
+                    file('${projectDir}/tests/data/coding_potential/novel_transcripts.tmap')
+                ])
+
+                input[1] = Channel.of([
+                    [ id: 'novel_transcripts' ],
+                    file('${projectDir}/tests/data/coding_potential/novel_transcripts.gtf')
+                ])
+
+                input[2] = Channel.of([
+                    [ id: 'novel_transcripts' ],
+                    file('${projectDir}/tests/data/coding_potential/novel_transcripts.fa')
+                ])
+
+                input[3] = Channel.fromPath('${projectDir}/tests/data/coding_potential/cds.fa')
+                input[4] = Channel.fromPath('${projectDir}/tests/data/coding_potential/noncoding.fa')
+                input[5] = Channel.fromPath('${projectDir}/tests/data/coding_potential/mrna.fa')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.cpat_hexamer },
+                { assert workflow.out.cpat_logit },
+                { assert workflow.out.cpat_results },
+                { assert workflow.out.feelnc_results },
+                { assert workflow.out.plek_results },
+                { assert workflow.out.final_protein_coding_gtf },
+                { assert workflow.out.final_protein_coding_fasta },
+                { assert workflow.out.protein_coding_pred_summary }
+            )
+        }
+    }
+}
