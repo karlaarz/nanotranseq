@@ -25,7 +25,6 @@ process FILTER_GFFCOMPARE_CLASSES {
     template 'filter_gffcompare_classes.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.novel.gtf
     touch ${prefix}.novel.tmap

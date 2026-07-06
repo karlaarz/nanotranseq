@@ -10,7 +10,7 @@ include { ALIGNMENT                       } from '../subworkflows/local/alignmen
 include { BEDTOOLS_BIGWIG                 } from '../subworkflows/local/bedtools_bigwig/main'
 include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
 include { NOVEL_TRANSCRIPTS               } from '../subworkflows/local/novel_transcripts/main'
-include { IDENTIFY_NOVEL_PROTEIN_CODING   } from '../subworkflows/local/identify_novel_lncrna/main'
+include { IDENTIFY_NOVEL_PROTEIN_CODING   } from '../subworkflows/local/identify_novel_protein_coding/main'
 include { EXTRACT_MRNA_SEQUENCES          } from '../modules/local/extract_mrna_sequences/main'
 include { EXTRACT_CDS_SEQUENCES           } from '../modules/local/extract_cds_sequences/main'
 include { EXTRACT_LNCRNA_SEQUENCES        } from '../modules/local/extract_lncrna_sequences/main'
@@ -37,7 +37,7 @@ workflow NANOTRANSEQ {
     ch_gene_id      // channel: attributed gene ID in the GTF file
     ch_gene_attributes     // channel: extra gene attributes in the GTF file
     ch_transcript_fasta     // channel: transcript fasta file read in from --transcript_fasta
-    ch_direct_rna // channel: direct_rna read in from --direct_rna
+    ch_direct_rna           // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
     ch_formula       // channel: formula read in from --deseq2_formula
     ch_comparison    // channel: comparison read in from --deseq2_comparison

@@ -29,3 +29,4 @@ pipeline_info/*.{html,json,txt,yml}
 transcript_usage/isoform_switch/*.{pdf}
 transcript_usage/drimseq/*.{pdf}
 novel_transcripts/filter_gffcompare_classes/*.novel.gtf
+identify_novel_protein_coding/cpat/*.logitModel.RData

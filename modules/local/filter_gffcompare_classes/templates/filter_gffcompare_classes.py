@@ -60,7 +60,7 @@ def filter_gtf(gtf_path, selected_ids, filtered_gtf_path):
     with open(gtf_path) as gtf_in, open(filtered_gtf_path, "w") as gtf_out:
         for line in gtf_in:
             if line.startswith("#"):
-                gtf_out.write(line)
+                #gtf_out.write(line)
                 continue
 
             match = TRANSCRIPT_ID_RE.search(line)
