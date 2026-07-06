@@ -61,18 +61,15 @@
                 },
                 "skip_cpat": {
                     "type": "boolean",
-                    "description": "Skip CPAT coding-potential prediction.",
-                    "default": false
+                    "description": "Skip CPAT coding-potential prediction."
                 },
                 "skip_feelnc": {
                     "type": "boolean",
-                    "description": "Skip FEELnc codpot coding-potential prediction.",
-                    "default": false
+                    "description": "Skip FEELnc codpot coding-potential prediction."
                 },
                 "skip_plek": {
                     "type": "boolean",
-                    "description": "Skip PLEK coding-potential prediction.",
-                    "default": false
+                    "description": "Skip PLEK coding-potential prediction."
                 },
                 "cpat_hexamer": {
                     "type": "string",
@@ -356,5 +353,11 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "consensus_mode": {
+            "type": "string",
+            "default": "strict"
+        }
+    }
 }

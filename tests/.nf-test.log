@@ -1,0 +1,8 @@
+Jul-03 15:38:41.589 [main] INFO  com.askimed.nf.test.App - nf-test 0.9.3
+Jul-03 15:38:41.597 [main] INFO  com.askimed.nf.test.App - Arguments: [test, subworkflows/local/identify_novel_lncrna/tests/main.nf.test, --update-snapshot]
+Jul-03 15:38:42.065 [main] INFO  com.askimed.nf.test.App - Nextflow Version: 25.10.4
+Jul-03 15:38:42.066 [main] WARN  com.askimed.nf.test.commands.RunTestsCommand - No nf-test config file found.
+Jul-03 15:38:42.070 [main] INFO  com.askimed.nf.test.lang.dependencies.DependencyResolver - Loaded 2 files from directory /Users/karla.ruiz/Documents/development/nanotranseq/tests in 0.003 sec
+Jul-03 15:38:42.071 [main] INFO  com.askimed.nf.test.lang.dependencies.DependencyResolver - Found 0 files containing tests.
+Jul-03 15:38:42.071 [main] DEBUG com.askimed.nf.test.lang.dependencies.DependencyResolver - Found files: []
+Jul-03 15:38:42.073 [main] INFO  com.askimed.nf.test.commands.RunTestsCommand - Found 0 tests to execute.
