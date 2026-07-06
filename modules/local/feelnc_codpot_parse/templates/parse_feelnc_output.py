@@ -56,23 +56,18 @@ def parse_feelnc_output(input_file, output_file, fasta_file, prefix):
 
     print(f"lncRNAs: {len(lncrna_ids)}, Coding Potential Evidence: {len(mrna_ids)}", file=sys.stderr)
 
-    if lncrna_ids:
-        with open(f"{prefix}.lncRNA.fa", 'w') as lnc_out:
-            for record in SeqIO.parse(fasta_file, "fasta"):
-                if record.id in lncrna_ids:
-                    SeqIO.write(record, lnc_out, "fasta")
-
-    if mrna_ids:
-        with open(f"{prefix}.mRNA.fa", 'w') as mrna_out:
-            for record in SeqIO.parse(fasta_file, "fasta"):
-                if record.id in mrna_ids:
-                    SeqIO.write(record, mrna_out, "fasta")
+    with open(f"{prefix}.lncRNA.fa", 'w') as lnc_out, open(f"{prefix}.mRNA.fa", 'w') as mrna_out:
+        for record in SeqIO.parse(fasta_file, "fasta"):
+            if record.id in lncrna_ids:
+                SeqIO.write(record, lnc_out, "fasta")
+            if record.id in mrna_ids:
+                SeqIO.write(record, mrna_out, "fasta")
 
 
 def main():
     # Variables from Nextflow — NO genome_fasta, NO FEELnc execution
     input_file     = "$feelnc_rf_txt"       # *_RF.txt from FEELNC_CODPOT_RUN
-    candidate_fasta = "$candidate_fasta"    # .noORF.fa from FEELNC_CODPOT_RUN
+    candidate_fasta = "$candidate_fasta"    # candidate transcript FASTA
     prefix         = "$task.ext.prefix" if "$task.ext.prefix" != "null" else "${meta.id}"
     output_file    = f"{prefix}.feelnc.tsv"
 

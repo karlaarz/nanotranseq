@@ -12,7 +12,7 @@ def read_cpat(path):
     with open(path) as handle:
         header = handle.readline()
         for line in handle:
-            fields = line.rstrip("\n").split("\t")
+            fields = line.rstrip("\\n").split("\\t")
             if len(fields) < 11:
                 continue
             score = float(fields[10])
@@ -25,7 +25,7 @@ def read_simple_prediction(path, noncoding_labels):
     with open(path) as handle:
         header = handle.readline()
         for line in handle:
-            fields = line.rstrip("\n").split("\t")
+            fields = line.rstrip("\\n").split("\\t")
             if len(fields) < 3:
                 continue
             prediction = "Non-coding" if fields[1] in noncoding_labels else "Coding"
@@ -36,11 +36,11 @@ def read_simple_prediction(path, noncoding_labels):
 def read_tmap(path):
     data = {}
     with open(path) as handle:
-        header = handle.readline().rstrip("\n").lstrip("#").split("\t")
+        header = handle.readline().rstrip("\\n").lstrip("#").split("\\t")
         columns = {name: index for index, name in enumerate(header)}
 
         for line in handle:
-            fields = line.rstrip("\n").split("\t")
+            fields = line.rstrip("\\n").split("\\t")
             if not fields:
                 continue
             query_id = fields[columns.get("qry_id", 4)]
@@ -70,11 +70,11 @@ def write_summary(path, transcript_ids, predictions, tmap_data):
         "votes", "cpat", "feelnc", "plek", "cpat_score", "feelnc_score", "plek_score"
     ]
     with open(path, "w") as out:
-        out.write("\t".join(header) + "\n")
+        out.write("\\t".join(header) + "\\n")
         for tid in sorted(transcript_ids):
             row = predictions[tid]
             tmap = tmap_data.get(tid, {})
-            out.write("\t".join([
+            out.write("\\t".join([
                 tid,
                 tmap.get("class_code", "NA"),
                 tmap.get("ref_gene_id", "NA"),
@@ -87,13 +87,15 @@ def write_summary(path, transcript_ids, predictions, tmap_data):
                 str(row["cpat_score"]),
                 str(row["feelnc_score"]),
                 str(row["plek_score"]),
-            ]) + "\n")
+            ]) + "\\n")
 
 
 def write_gtf(gtf_path, out_path, keep_ids):
     with open(gtf_path) as src, open(out_path, "w") as out:
         for line in src:
-            if line.startswith("#") or any(f'transcript_id "{tid}"' in line for tid in keep_ids):
+            if line.startswith("#"):
+                continue
+            if any(f'transcript_id "{tid}"' in line for tid in keep_ids):
                 out.write(line)
 
 
@@ -144,15 +146,15 @@ def main():
 
     noncoding_ids = transcript_ids - protein_coding_ids
     with open(f"{prefix}.coding_potential_report.txt", "w") as out:
-        out.write(f"Consensus mode: {mode}\n")
-        out.write(f"CPAT cutoff: {CPAT_CUTOFF}\n")
-        out.write(f"Total transcripts analyzed: {len(transcript_ids)}\n")
-        out.write(f"Predicted protein-coding transcripts: {len(protein_coding_ids)}\n")
-        out.write(f"Predicted noncoding/no-consensus transcripts: {len(noncoding_ids)}\n")
+        out.write(f"Consensus mode: {mode}\\n")
+        out.write(f"CPAT cutoff: {CPAT_CUTOFF}\\n")
+        out.write(f"Total transcripts analyzed: {len(transcript_ids)}\\n")
+        out.write(f"Predicted protein-coding transcripts: {len(protein_coding_ids)}\\n")
+        out.write(f"Predicted noncoding/no-consensus transcripts: {len(noncoding_ids)}\\n")
 
     with open("versions.yml", "w") as out:
-        out.write("${task.process}:\n")
-        out.write(f"    python: {platform.python_version()}\n")
+        out.write("${task.process}:\\n")
+        out.write(f"    python: {platform.python_version()}\\n")
 
 
 if __name__ == "__main__":

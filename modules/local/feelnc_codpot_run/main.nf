@@ -7,13 +7,15 @@ process FEELNC_CODPOT_RUN {
         'biocontainers/feelnc:0.2--pl526_0' }"
 
     input:
-    tuple val(meta), path(candidate_fasta)      // FILTER_TRANSCRIPTS_EXONS.out.filtered_exon_fasta
-    path mrna_fasta                             // PREPARE_GENOME.out.mrna_fasta
+    tuple val(meta), path(candidate_fasta)
+    path mrna_fasta
+    path noncoding_fasta
 
     output:
-    tuple val(meta), path("*.feelnc_codpot_RF.txt") , emit: codpot_full
-    tuple val(meta), path("*.feelnc_codpot.noORF.fa"), emit: candidate_fasta
-    path "versions.yml"                              , emit: versions
+    tuple val(meta), path("*.feelnc_codpot_RF.txt")    , emit: codpot_full
+    tuple val(meta), path("*.feelnc_codpot.lncRNA.fa") , emit: lncrna_fasta
+    tuple val(meta), path("*.feelnc_codpot.mRNA.fa")   , emit: mrna_fasta
+    path "versions.yml"                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,7 +29,7 @@ process FEELNC_CODPOT_RUN {
     FEELnc_codpot.pl \\
         -i ${candidate_fasta} \\
         -a ${mrna_fasta} \\
-        --mode=shuffle \\
+        -l ${noncoding_fasta} \\
         --numtx=500,500 \\
         -o ${prefix}.feelnc_codpot \\
         ${args}
@@ -35,7 +37,8 @@ process FEELNC_CODPOT_RUN {
     ls -la feelnc_codpot_out/ || true
 
     mv feelnc_codpot_out/${prefix}.feelnc_codpot_RF.txt .
-    mv feelnc_codpot_out/${prefix}.feelnc_codpot.noORF.fa .
+    mv feelnc_codpot_out/${prefix}.feelnc_codpot.lncRNA.fa .
+    mv feelnc_codpot_out/${prefix}.feelnc_codpot.mRNA.fa .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -47,7 +50,8 @@ process FEELNC_CODPOT_RUN {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.feelnc_codpot_RF.txt
-    touch ${prefix}.feelnc_codpot.noORF.fa
+    touch ${prefix}.feelnc_codpot.lncRNA.fa
+    touch ${prefix}.feelnc_codpot.mRNA.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

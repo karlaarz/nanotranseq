@@ -128,7 +128,7 @@ workflow NANOTRANSEQ {
             )
             ch_versions = ch_versions.mix(EXTRACT_CDS_SEQUENCES.out.versions)
 
-            if (!has_cpat_models && !params.cpat_training_noncoding_fasta) {
+            if (!params.cpat_training_noncoding_fasta) {
                 EXTRACT_LNCRNA_SEQUENCES(
                     ch_fasta.map { meta, fasta_file -> fasta_file },
                     ch_gtf,
@@ -142,7 +142,7 @@ workflow NANOTRANSEQ {
                 EXTRACT_CDS_SEQUENCES.out.fasta
             ch_cpat_training_noncoding_fasta = params.cpat_training_noncoding_fasta ?
                 Channel.fromPath(params.cpat_training_noncoding_fasta) :
-                (has_cpat_models ? Channel.empty() : EXTRACT_LNCRNA_SEQUENCES.out.fasta)
+                EXTRACT_LNCRNA_SEQUENCES.out.fasta
             ch_feelnc_mrna_fasta = params.feelnc_mrna_fasta ?
                 Channel.fromPath(params.feelnc_mrna_fasta) :
                 EXTRACT_MRNA_SEQUENCES.out.fasta

@@ -13,7 +13,7 @@ workflow IDENTIFY_NOVEL_PROTEIN_CODING {
         ch_novel_gtf                          // NOVEL_TRANSCRIPTS.out.novel_gtf
         ch_novel_fasta                        // NOVEL_TRANSCRIPTS.out.novel_fasta
         ch_cds_fasta                          // coding training FASTA for CPAT
-        ch_noncoding_fasta                    // noncoding negative training FASTA for CPAT
+        ch_noncoding_fasta                    // noncoding reference FASTA for CPAT and FEELnc
         ch_mrna_fasta                         // protein-coding mRNA reference FASTA for FEELnc
 
 
@@ -64,7 +64,8 @@ workflow IDENTIFY_NOVEL_PROTEIN_CODING {
         if (!params.skip_feelnc) {
             FEELNC_CODPOT_RUN (
                 ch_candidate_fa,
-                ch_mrna_fasta
+                ch_mrna_fasta,
+                ch_noncoding_fasta
             )
 
             FEELNC_CODPOT_PARSE (
