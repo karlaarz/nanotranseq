@@ -25,8 +25,8 @@ workflow STRINGTIE_FEATURECOUNTS {
     stringtie2_input = bam
         .combine(fasta_file)
         .combine(reference_gtf)
-        .map { meta, bam_file, fasta, gtf ->
-            tuple(meta, fasta, gtf, bam_file)
+        .map { meta, bam_file,fasta_f, gtf ->
+            tuple(meta, fasta_f, gtf, bam_file)
         }
 
     STRINGTIE2(

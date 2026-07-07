@@ -60,12 +60,6 @@
                 "MINIMAP2_INDEX": {
                     "minimap2": "2.29-r1283"
                 },
-                "MULTIQC": {
-                    "multiqc": 1.32
-                },
-                "NANOPLOT": {
-                    "nanoplot": "1.46.1"
-                },
                 "PLEK_PARSE": {
                     "python": "3.9.21"
                 },
@@ -92,9 +86,6 @@
                 },
                 "SUBREAD_FEATURECOUNTS_TRANSCRIPTS": {
                     "subread": "2.0.6"
-                },
-                "TOULLIGQC": {
-                    "toulligqc": "2.7.1"
                 },
                 "TXIMETA_TXIMPORT": {
                     "bioconductor-tximeta": "1.20.1"
@@ -466,10 +457,10 @@
                 "isoform_switch_results.rds:md5,301332f37b5626ed96769c3c81dd5687"
             ]
         ],
+        "timestamp": "2026-07-07T11:32:16.681575",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-06T18:50:03.213324"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     }
 }

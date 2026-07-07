@@ -8,7 +8,7 @@ process FEELNC_CODPOT_PARSE {
 
     input:
     tuple val(meta), path(feelnc_rf_txt)      // *_RF.txt codpot_full
-    tuple val(meta), path(candidate_fasta)    // exon_filtered.fa
+    tuple val(meta2), path(candidate_fasta)    // exon_filtered.fa
 
     output:
     tuple val(meta), path("*.feelnc.tsv") , emit: feelnc_results

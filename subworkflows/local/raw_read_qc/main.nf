@@ -19,12 +19,18 @@ workflow RAW_READS_QC {
     fastqc_zip = FASTQC.out.zip
     fastqc_html = FASTQC.out.html
 
-    MULTIQC(FASTQC.out.zip.collect{it[1]},
-            [],
-            [],
-            [],
-            [],
-            [])
+    // MULTIQC(FASTQC.out.zip.collect{it[1]},
+    //         [],
+    //         [],
+    //         [],
+    //         [],
+    //         [])
+
+    MULTIQC(
+          FASTQC.out.zip
+              .collect { it[1] }
+              .map { files -> tuple([:], files, [], [], [], []) }
+    )
 
     // Run TOULLIGQC
     TOULLIGQC(reads)
@@ -40,7 +46,7 @@ workflow RAW_READS_QC {
     nanoplot_txt  = NANOPLOT.out.txt
 
     // Collect versions for all tools used in this workflow
-    versions = versions.mix(FASTQC.out.versions, MULTIQC.out.versions, TOULLIGQC.out.versions, NANOPLOT.out.versions)
+    //versions = versions.mix(FASTQC.out.versions, MULTIQC.out.versions, TOULLIGQC.out.versions, NANOPLOT.out.versions)
 
     emit:
     fastqc_zip
