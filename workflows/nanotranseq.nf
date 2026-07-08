@@ -9,6 +9,11 @@ include { DIRECT_RNA_QC                   } from '../subworkflows/local/direct_r
 include { ALIGNMENT                       } from '../subworkflows/local/alignment/main'
 include { BEDTOOLS_BIGWIG                 } from '../subworkflows/local/bedtools_bigwig/main'
 include { STRINGTIE_FEATURECOUNTS         } from '../subworkflows/local/stringtie_featurecounts/main'
+include { NOVEL_TRANSCRIPTS               } from '../subworkflows/local/novel_transcripts/main'
+include { IDENTIFY_NOVEL_PROTEIN_CODING   } from '../subworkflows/local/identify_novel_protein_coding/main'
+include { EXTRACT_MRNA_SEQUENCES          } from '../modules/local/extract_mrna_sequences/main'
+include { EXTRACT_CDS_SEQUENCES           } from '../modules/local/extract_cds_sequences/main'
+include { EXTRACT_LNCRNA_SEQUENCES        } from '../modules/local/extract_lncrna_sequences/main'
 include { DIFFERENTIAL_ANALYSIS           } from '../subworkflows/nfdata-omics/deseq2_analysis/main'
 include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
 include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
@@ -32,16 +37,20 @@ workflow NANOTRANSEQ {
     ch_gene_id      // channel: attributed gene ID in the GTF file
     ch_gene_attributes     // channel: extra gene attributes in the GTF file
     ch_transcript_fasta     // channel: transcript fasta file read in from --transcript_fasta
-    ch_direct_rna // channel: direct_rna read in from --direct_rna
+    ch_direct_rna           // channel: direct_rna read in from --direct_rna
     ch_minimap2_index   // channel: index read in from --minimap2_index
     ch_formula       // channel: formula read in from --deseq2_formula
     ch_comparison    // channel: comparison read in from --deseq2_comparison
     ch_fdr_threshold // channel: fdr_threshold read in from --deseq2_fdr_threshold
+    multiqc_config
+    multiqc_logo
+    multiqc_methods_description
+    outdir
 
     main:
 
-    ch_versions = channel.empty()
-
+    def ch_versions = channel.empty()
+    def ch_multiqc_files = channel.empty()
     //
     // MODULE: Run QC on raw reads
     //
@@ -91,6 +100,67 @@ workflow NANOTRANSEQ {
             ch_gtf,
         )
         ch_versions = ch_versions.mix(STRINGTIE_FEATURECOUNTS.out.versions)
+
+        // Classify merged StringTie transcripts against the reference annotation
+        // and extract candidate novel transcript sequences.
+        NOVEL_TRANSCRIPTS(
+            STRINGTIE_FEATURECOUNTS.out.merged_gtf,
+            ch_fasta,
+            ch_gtf
+        )
+        ch_versions = ch_versions.mix(NOVEL_TRANSCRIPTS.out.versions)
+
+        if (params.run_coding_potential) {
+            if (params.skip_cpat || params.skip_feelnc || params.skip_plek) {
+                exit 1, "Coding-potential skips are not supported yet because COMBINE_PREDICTIONS currently expects CPAT, FEELnc and PLEK outputs."
+            }
+            has_cpat_models = params.cpat_hexamer && params.cpat_logit_model
+            has_partial_cpat_models = params.cpat_hexamer || params.cpat_logit_model
+            if (has_partial_cpat_models && !has_cpat_models) {
+                exit 1, "Coding-potential analysis requires both --cpat_hexamer and --cpat_logit_model when using pre-built CPAT models."
+            }
+
+            EXTRACT_MRNA_SEQUENCES(
+                ch_fasta.map { meta, fasta_file -> fasta_file },
+                ch_gtf
+            )
+            ch_versions = ch_versions.mix(EXTRACT_MRNA_SEQUENCES.out.versions)
+
+            EXTRACT_CDS_SEQUENCES(
+                ch_fasta.map { meta, fasta_file -> fasta_file },
+                ch_gtf
+            )
+            ch_versions = ch_versions.mix(EXTRACT_CDS_SEQUENCES.out.versions)
+
+            if (!params.cpat_training_noncoding_fasta) {
+                EXTRACT_LNCRNA_SEQUENCES(
+                    ch_fasta.map { meta, fasta_file -> fasta_file },
+                    ch_gtf,
+                    Channel.value(params.lncrna_biotypes)
+                )
+                ch_versions = ch_versions.mix(EXTRACT_LNCRNA_SEQUENCES.out.versions)
+            }
+
+            ch_cpat_training_coding_fasta = params.cpat_training_coding_fasta ?
+                Channel.fromPath(params.cpat_training_coding_fasta) :
+                EXTRACT_CDS_SEQUENCES.out.fasta
+            ch_cpat_training_noncoding_fasta = params.cpat_training_noncoding_fasta ?
+                Channel.fromPath(params.cpat_training_noncoding_fasta) :
+                EXTRACT_LNCRNA_SEQUENCES.out.fasta
+            ch_feelnc_mrna_fasta = params.feelnc_mrna_fasta ?
+                Channel.fromPath(params.feelnc_mrna_fasta) :
+                EXTRACT_MRNA_SEQUENCES.out.fasta
+
+            IDENTIFY_NOVEL_PROTEIN_CODING(
+                NOVEL_TRANSCRIPTS.out.tmap,
+                NOVEL_TRANSCRIPTS.out.novel_gtf,
+                NOVEL_TRANSCRIPTS.out.novel_fasta,
+                ch_cpat_training_coding_fasta,
+                ch_cpat_training_noncoding_fasta,
+                ch_feelnc_mrna_fasta
+            )
+            ch_versions = ch_versions.mix(IDENTIFY_NOVEL_PROTEIN_CODING.out.versions)
+        }
 
         // Create metadata for DESeq2
         ch_metadata = channel
@@ -165,7 +235,7 @@ workflow NANOTRANSEQ {
     //
     // Collate and save software versions
     //
-    def topic_versions = Channel.topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
@@ -185,7 +255,7 @@ workflow NANOTRANSEQ {
     softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name:  'nanotranseq_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
@@ -194,7 +264,6 @@ workflow NANOTRANSEQ {
     emit:
     multiqc_report = RAW_READS_QC.out.multiqc_report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
-
 }
 
 /*

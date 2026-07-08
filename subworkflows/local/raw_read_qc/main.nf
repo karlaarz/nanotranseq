@@ -19,12 +19,11 @@ workflow RAW_READS_QC {
     fastqc_zip = FASTQC.out.zip
     fastqc_html = FASTQC.out.html
 
-    MULTIQC(FASTQC.out.zip.collect{it[1]},
-            [],
-            [],
-            [],
-            [],
-            [])
+    MULTIQC(
+          FASTQC.out.zip
+              .collect { it[1] }
+              .map { files -> tuple([:], files, [], [], [], []) }
+    )
 
     // Run TOULLIGQC
     TOULLIGQC(reads)
@@ -40,7 +39,11 @@ workflow RAW_READS_QC {
     nanoplot_txt  = NANOPLOT.out.txt
 
     // Collect versions for all tools used in this workflow
-    versions = versions.mix(FASTQC.out.versions, MULTIQC.out.versions, TOULLIGQC.out.versions, NANOPLOT.out.versions)
+    // MULTIQC emits an eval-tuple (not versions.yml) and can't use the versions topic
+    // (deadlock: its input depends on the topic). Convert it to a YAML string so
+    // softwareVersionsToYAML can parse it like the file-based versions.
+    ch_multiqc_version = MULTIQC.out.versions.map { process, tool, ver -> "\"${process}\":\n  ${tool}: ${ver}\n" }
+    versions = versions.mix(ch_multiqc_version, TOULLIGQC.out.versions, NANOPLOT.out.versions)
 
     emit:
     fastqc_zip

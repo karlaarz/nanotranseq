@@ -49,6 +49,53 @@
                     "description": "Tool to be used for quantification. Either 'featurecounts' or 'salmon'",
                     "default": "featurecounts"
                 },
+                "novel_class_codes": {
+                    "type": "string",
+                    "description": "Comma-separated gffcompare class codes to keep as novel transcript candidates for coding-potential analysis.",
+                    "default": "u,i,x,j,o"
+                },
+                "run_coding_potential": {
+                    "type": "boolean",
+                    "description": "Run coding-potential analysis on novel transcript candidates.",
+                    "default": true
+                },
+                "skip_cpat": {
+                    "type": "boolean",
+                    "description": "Skip CPAT coding-potential prediction."
+                },
+                "skip_feelnc": {
+                    "type": "boolean",
+                    "description": "Skip FEELnc codpot coding-potential prediction."
+                },
+                "skip_plek": {
+                    "type": "boolean",
+                    "description": "Skip PLEK coding-potential prediction."
+                },
+                "cpat_hexamer": {
+                    "type": "string",
+                    "description": "Pre-built CPAT hexamer table. Use with --cpat_logit_model."
+                },
+                "cpat_logit_model": {
+                    "type": "string",
+                    "description": "Pre-built CPAT logit model. Use with --cpat_hexamer."
+                },
+                "cpat_training_coding_fasta": {
+                    "type": "string",
+                    "description": "Optional FASTA file with known coding transcripts/CDS used to build a CPAT model when pre-built CPAT models are not provided. If omitted, the pipeline extracts protein-coding CDS from the reference GTF."
+                },
+                "cpat_training_noncoding_fasta": {
+                    "type": "string",
+                    "description": "Optional FASTA file with known noncoding transcripts used only as the negative training set when building a CPAT model. If omitted, the pipeline extracts lncRNA-like transcripts from the reference GTF."
+                },
+                "feelnc_mrna_fasta": {
+                    "type": "string",
+                    "description": "Optional FASTA file with known mRNA sequences used as coding reference for FEELnc codpot. If omitted, the pipeline extracts protein-coding transcripts from the reference GTF."
+                },
+                "lncrna_biotypes": {
+                    "type": "string",
+                    "description": "Comma-separated reference GTF biotypes to extract as the automatic noncoding negative set for CPAT model building.",
+                    "default": "lncRNA,lincRNA,antisense,sense_intronic,sense_overlapping,3prime_overlapping_ncRNA,macro_lncRNA,bidirectional_promoter_lncRNA,non_coding"
+                },
                 "deseq2_comparisons": {
                     "type": "string",
                     "description": "Comparisons to be performed with DESeq2"
@@ -127,7 +174,6 @@
                 },
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
@@ -233,13 +279,6 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
-                    "hidden": true
-                },
                 "multiqc_config": {
                     "type": "string",
                     "format": "file-path",
@@ -306,5 +345,11 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "consensus_mode": {
+            "type": "string",
+            "default": "strict"
+        }
+    }
 }

@@ -42,7 +42,7 @@ workflow ALIGNMENT {
             index_input = minimap2_index
                 .filter { it.name == 'no_minimap2_index' }
                 .combine(genome_reference)
-                .map { _, meta, fasta -> tuple(meta, fasta) }
+                .map { _index, meta, fasta -> tuple(meta, fasta) }
 
             MINIMAP2_INDEX(index_input)
 
