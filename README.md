@@ -14,7 +14,9 @@
 
 ## Introduction
 
-**nfdata-omics/nanotranseq** is a Nextflow pipeline for **Oxford Nanopore long-read RNA sequencing** (direct RNA and cDNA). It takes basecalled FASTQ reads and a reference genome + annotation, and produces:
+**nfdata-omics/nanotranseq** is a Nextflow pipeline for **Oxford Nanopore long-read RNA sequencing** (direct RNA and cDNA). It takes basecalled FASTQ reads and a reference genome + annotation.
+
+![nfdata-omics/nanotranseq workflow](./assets/nanotranseq.svg)
 
 - Long-read QC reports (NanoPlot, toulligQC, FastQC, MultiQC)
 - Spliced genome alignments (minimap2) and genome-browser tracks (BigWig)
