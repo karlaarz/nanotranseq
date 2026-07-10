@@ -1,6 +1,6 @@
 process SQANTI3 {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_low'
 
     container "docker.io/anaconesalab/sqanti3:v6.0.1"
 
