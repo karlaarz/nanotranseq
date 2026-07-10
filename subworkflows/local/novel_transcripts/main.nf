@@ -66,7 +66,7 @@ workflow NOVEL_TRANSCRIPTS {
         // with SQANTI3. Its corrected GTF replaces the raw filtered GTF downstream.
         //
 
-        ch_fasta_for_sqanti = fasta.map { meta, fasta_file -> fasta_file }
+        ch_fasta_for_sqanti = fasta.map { _meta, fasta_file -> fasta_file }
 
         ch_selected_gtf = FILTER_GFFCOMPARE_CLASSES.out.filtered_gtf
         sqanti_classification = channel.empty()
