@@ -69,7 +69,7 @@ workflow NOVEL_TRANSCRIPTS {
         ch_fasta_for_sqanti = fasta.map { meta, fasta_file -> fasta_file }
 
         ch_selected_gtf = FILTER_GFFCOMPARE_CLASSES.out.filtered_gtf
-        sqanti_classification = Channel.empty()
+        sqanti_classification = channel.empty()
 
         if (params.run_sqanti) {
             SQANTI3(
