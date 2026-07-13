@@ -121,6 +121,11 @@
                     "description": "Run SQANTI3 structural classification and QC on assembled transcripts.",
                     "default": true
                 },
+                "run_polya": {
+                    "type": "boolean",
+                    "description": "Estimate poly(A) tail length per read (nanopolish polya). Direct-RNA input with raw signal (FAST5) required. Signal preparation runs automatically. Produces a per-read TSV; no between-condition comparison is performed.",
+                    "default": false
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
