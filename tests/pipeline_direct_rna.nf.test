@@ -41,8 +41,8 @@ HEK293T-METTL3-KO,1,ko,${dataDir}/HEK293T-METTL3-KO-rep1/HEK293T-METTL3-KO-rep1.
                     stable_path,
                 // All files with stable contents
                     stable_content
-                ).match() ,
-                }
+                ).match()
+                },
                 { assert workflow.success },
 
                 // poly(A) ran end-to-end off the GENOME alignment (the real pipeline path,
