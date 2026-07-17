@@ -30,7 +30,7 @@
 ## Pipeline steps
 
 1. **Read QC** — NanoPlot, toulligQC, FastQC → MultiQC (`RAW_READS_QC`)
-2. **Trimming** — Chopper, cDNA only (`DIRECT_RNA_QC`, skipped when `--direct_rna`)
+2. **Trimming** — Chopper, cDNA only (`CDNA_QC`, skipped when `--direct_rna`)
 3. **Alignment** — minimap2 spliced alignment → sorted BAM (`ALIGNMENT`); optional GPU via Parabricks
 4. **Coverage tracks** — bedtools + UCSC tools → BigWig (`BEDTOOLS_BIGWIG`)
 5. **Assembly + counting** — StringTie2 (long-read mode) → StringTie merge → featureCounts (`STRINGTIE_FEATURECOUNTS`)
