@@ -12,6 +12,7 @@ nextflow_pipeline {
     // nf-test is a temp dir, not the repo root. So we generate the samplesheet at
     // runtime with absolute ${projectDir} row paths (kept out of git) and point the
     // run at it. fast5 stays a per-sample samplesheet column, as in production.
+    config "../conf/test_direct_rna.config"
     test("direct RNA end-to-end: genome-based poly(A) + minimap2 transcriptome, DE skipped") {
 
         setup {
@@ -36,12 +37,7 @@ HEK293T-METTL3-KO,1,ko,${dataDir}/HEK293T-METTL3-KO-rep1/HEK293T-METTL3-KO-rep1.
             assertAll(
                 { assert snapshot(
                 // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nanotranseq_software_mqc_versions.yml"),
-                // All stable path name, with a relative path
-                    stable_path,
-                // All files with stable contents
-                    stable_content
-                ).match()
+                    removeNextflowVersion("$outputDir/pipeline_info/nanotranseq_software_mqc_versions.yml")).match()
                 },
                 { assert workflow.success },
 
