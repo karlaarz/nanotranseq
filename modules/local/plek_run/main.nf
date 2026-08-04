@@ -38,6 +38,8 @@ process PLEK_RUN {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.plek.txt
+    rm -f ${fasta}
+    touch ${fasta}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
