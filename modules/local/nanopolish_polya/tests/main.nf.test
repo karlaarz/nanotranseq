@@ -44,7 +44,7 @@ nextflow_process {
                 ] }
                 """
             }
-        }    
+        }
         run("MINIMAP2_ALIGN") {
             script "../../../nf-core/minimap2/align/main.nf"
             process {
