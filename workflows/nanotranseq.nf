@@ -20,6 +20,7 @@ include { SIGNAL_ANALYSIS                 } from '../subworkflows/local/signal_a
 include { NANOPOLISH_POLYA                } from '../modules/local/nanopolish_polya/main'
 include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
 include { MINIMAP2_ALIGN as MINIMAP2_TRANSCRIPTOME } from '../modules/nf-core/minimap2/align/main'
+include { UNTAR                           } from '../modules/nf-core/untar/main'
 include { paramsSummaryMap                } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -272,7 +273,7 @@ workflow NANOTRANSEQ {
     if (params.run_polya) {
         // Read the fast5 signal directory per sample from the samplesheet
         def sheet_dir = file(params.input).parent
-        ch_fast5 = channel
+        ch_fast5_in = channel
             .fromPath(params.input)
             .splitCsv(header: true)
             .map { row ->
@@ -284,6 +285,19 @@ workflow NANOTRANSEQ {
                     file("${sheet_dir}/${row.fast5}", checkIfExists: true)
                 tuple(row.sample, f5)
             }
+            // The fast5 column takes either a directory or a tar archive of one. The
+            // archive form exists because Nextflow cannot stage a remote directory, so
+            // signal data hosted outside the repo has to travel as a single file.
+            .branch { _id, f5 ->
+                archive: f5.name ==~ /.*\.(tar\.gz|tgz|tar)$/
+                dir    : true
+            }
+
+        // Unpack only the archives; directories pass through untouched.
+        UNTAR( ch_fast5_in.archive.map { id, f5 -> tuple([ id: id ], f5) } )
+
+        ch_fast5 = ch_fast5_in.dir
+            .mix( UNTAR.out.untar.map { meta, untarred -> tuple(meta.id, untarred) } )
 
         // Attach fast5 to reads: [ meta, reads, fast5 ]
         ch_signal = ch_reads

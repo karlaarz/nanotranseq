@@ -1,2 +1,0 @@
-sample,replicate,condition,fastq_1,fast5
-HEK293T-WT,1,wt,tests/data/directrna/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz,tests/data/directrna/HEK293T-WT-rep1/fast5

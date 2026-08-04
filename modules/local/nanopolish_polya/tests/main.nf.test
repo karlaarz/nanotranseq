@@ -10,30 +10,52 @@ nextflow_process {
     tag "module"
 
     setup {
-        run("NANOPOLISH_INDEX") {
-            script "../../nanopolish_index/main.nf"
+        run("UNTAR") {
+            script "../../../nf-core/untar/main.nf"
             process {
                 """
                 input[0] = Channel.of([
                     [ id: 'HEK293T-WT-rep1' ],
-                    file("\${projectDir}/tests/data/directrna/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz", checkIfExists: true),
-                    file("\${projectDir}/tests/data/directrna/HEK293T-WT-rep1/fast5", type: 'dir', checkIfExists: true)
+                    file("\${params.drna_testdata_base}/HEK293T-WT-rep1/HEK293T-WT-rep1_fast5.tar.gz", checkIfExists: true)
                 ])
                 """
             }
         }
-
+        // run("NANOPOLISH_INDEX") {
+        //     script "../../nanopolish_index/main.nf"
+        //     process {
+        //         """
+        //         input[0] = Channel.of([
+        //             [ id: 'HEK293T-WT-rep1' ],
+        //             file("\${projectDir}/tests/data/directrna/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz", checkIfExists: true),
+        //             file("\${projectDir}/tests/data/directrna/HEK293T-WT-rep1/fast5", type: 'dir', checkIfExists: true)
+        //         ])
+        //         """
+        //     }
+        // }
+        run("NANOPOLISH_INDEX") {
+            script "../../nanopolish_index/main.nf"
+            process {
+                """
+                input[0] = UNTAR.out.untar.map { meta, fast5_dir -> [
+                    meta,
+                    file("\${params.drna_testdata_base}/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz", checkIfExists: true),
+                    fast5_dir
+                ] }
+                """
+            }
+        }    
         run("MINIMAP2_ALIGN") {
             script "../../../nf-core/minimap2/align/main.nf"
             process {
                 """
                 input[0] = Channel.of([
                     [ id: 'HEK293T-WT-rep1' ],
-                    file("\${projectDir}/tests/data/directrna/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz", checkIfExists: true)
+                    file("\${params.drna_testdata_base}/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz", checkIfExists: true)
                 ])
                 input[1] = Channel.of([
                     [ id: 'modification_transcriptome_subset' ],
-                    file("\${projectDir}/tests/data/directrna/reference/modification_transcriptome_subset.fa", checkIfExists: true)
+                    file("\${params.drna_testdata_base}/genome/drna_transcriptome.fa", checkIfExists: true)
                 ])
                 input[2] = true      // bam_format
                 input[3] = 'bai'     // bam_index_extension -> coordinate-sorted BAM + .bai
@@ -54,7 +76,8 @@ nextflow_process {
                     .join(MINIMAP2_ALIGN.out.bam)
                     .join(MINIMAP2_ALIGN.out.index)
 
-                input[1] = file("\${projectDir}/tests/data/directrna/reference/modification_transcriptome_subset.fa", checkIfExists: true)
+                input[1] = file("\${params.drna_testdata_base}/genome/drna_transcriptome.fa", checkIfExists: true)
+
                 """
             }
         }

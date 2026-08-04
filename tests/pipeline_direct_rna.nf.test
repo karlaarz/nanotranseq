@@ -17,9 +17,11 @@ nextflow_pipeline {
 
         setup {
             def dataDir = "${projectDir}/tests/data/directrna"
+            new File(dataDir).mkdirs()
+            def url = "https://raw.githubusercontent.com/nfdata-omics/test-datasets/nanotranseq/direct_rna"
             new File("${dataDir}/samplesheet_directrna.generated.csv").text = """sample,replicate,condition,fastq_1,fast5
-HEK293T-WT,1,wt,${dataDir}/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz,${dataDir}/HEK293T-WT-rep1/fast5
-HEK293T-METTL3-KO,1,ko,${dataDir}/HEK293T-METTL3-KO-rep1/HEK293T-METTL3-KO-rep1.fastq.gz,${dataDir}/HEK293T-METTL3-KO-rep1/fast5
+HEK293T-WT,1,wt,${url}/HEK293T-WT-rep1/HEK293T-WT-rep1.fastq.gz,${url}/HEK293T-WT-rep1/HEK293T-WT-rep1_fast5.tar.gz
+HEK293T-METTL3-KO,1,ko,${url}/HEK293T-METTL3-KO-rep1/HEK293T-METTL3-KO-rep1.fastq.gz,${url}/HEK293T-METTL3-KO-rep1/HEK293T-METTL3-KO-rep1_fast5.tar.gz
 """
         }
 

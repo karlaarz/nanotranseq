@@ -84,12 +84,15 @@
                 "UCSC_BEDTOBIGBED": {
                     "ucsc": 482
                 },
+                "UNTAR": {
+                    "untar": 1.34
+                },
                 "Workflow": {
                     "nfdata-omics/nanotranseq": "v1.0.0dev"
                 }
             }
         ],
-        "timestamp": "2026-07-17T13:03:41.483372",
+        "timestamp": "2026-08-03T16:33:54.157612",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
