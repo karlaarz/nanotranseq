@@ -40,7 +40,7 @@
                     "samtools": 1.21
                 },
                 "MULTIQC": {
-                    "multiqc": 1.34
+                    "multiqc": 1.35
                 },
                 "NANOPLOT": {
                     "nanoplot": "1.46.1"
@@ -92,7 +92,7 @@
                 }
             }
         ],
-        "timestamp": "2026-08-03T16:33:54.157612",
+        "timestamp": "2026-08-19T11:38:42.968259",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
