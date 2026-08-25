@@ -43,18 +43,18 @@ process XPORE_DIFFMOD {
         --config ${prefix}_config.yml \\
         --n_processes $task.cpus \\
         $args
-    
+
     # Summary row for the MultiQC report. The comparison columns are named after the
     # conditions in the config, so the p-value column is found by prefix, not by name.
     python3 - <<'PYTHON' > ${prefix}_xpore_mqc.tsv
     import csv
-      
+
     rows = list(csv.DictReader(open("diffmod/diffmod.table")))
     pvals = [c for c in (rows[0] if rows else {}) if c.startswith("pval_")]
     col = pvals[0] if pvals else None
     sig = [r for r in rows if col and r[col] not in ("", "nan") and float(r[col]) < 0.05]
     comparison = col[len("pval_"):] if col else "n/a"
-      
+
     print("# id: 'xpore'")
     print("# section_name: 'xPore differential modification'")
     print("# description: 'Per-site comparison of modification rates between conditions. Significant sites are those with an uncorrected p-value below 0.05.'")

@@ -42,11 +42,11 @@ process M6ANET {
     # Tabs are written as \t: Groovy turns them into real tabs before the shell sees this.
     python3 - <<'PYTHON' > ${prefix}_m6anet_mqc.tsv
     import csv
-      
+
     rows = list(csv.DictReader(open("${prefix}.m6a_sites.csv")))
     high = [r for r in rows if float(r["probability_modified"]) > 0.9]
     ratio = sum(float(r["mod_ratio"]) for r in high) / len(high) if high else 0.0
-      
+
     print("# id: 'm6anet'")
     print("# section_name: 'm6anet m6A sites'")
     print("# description: 'DRACH sites called by m6anet on the nanopolish eventalign table. High-confidence sites are those with probability_modified above 0.9.'")
