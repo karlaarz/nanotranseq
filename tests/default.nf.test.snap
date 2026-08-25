@@ -206,6 +206,16 @@
                 "pipeline_info",
                 "pipeline_info/nanotranseq_software_mqc_versions.yml",
                 "pseudoalignment",
+                "pseudoalignment/merged_results",
+                "pseudoalignment/merged_results/all_samples.gene_counts.tsv",
+                "pseudoalignment/merged_results/all_samples.gene_counts_length_scaled.tsv",
+                "pseudoalignment/merged_results/all_samples.gene_counts_scaled.tsv",
+                "pseudoalignment/merged_results/all_samples.gene_lengths.tsv",
+                "pseudoalignment/merged_results/all_samples.gene_tpm.tsv",
+                "pseudoalignment/merged_results/all_samples.transcript_counts.tsv",
+                "pseudoalignment/merged_results/all_samples.transcript_lengths.tsv",
+                "pseudoalignment/merged_results/all_samples.transcript_tpm.tsv",
+                "pseudoalignment/merged_results/reference.tx2gene.tsv",
                 "pseudoalignment/minimap2_transcriptome",
                 "pseudoalignment/minimap2_transcriptome/K562",
                 "pseudoalignment/minimap2_transcriptome/K562/K562.bam",
@@ -397,18 +407,7 @@
                 "transcript_usage/isoform_switch",
                 "transcript_usage/isoform_switch/isoform_switch_plots.pdf",
                 "transcript_usage/isoform_switch/isoform_switch_results.csv",
-                "transcript_usage/isoform_switch/isoform_switch_results.rds",
-                "tx2gene",
-                "tx2gene/reference.tx2gene.tsv",
-                "tximport",
-                "tximport/all_samples.gene_counts.tsv",
-                "tximport/all_samples.gene_counts_length_scaled.tsv",
-                "tximport/all_samples.gene_counts_scaled.tsv",
-                "tximport/all_samples.gene_lengths.tsv",
-                "tximport/all_samples.gene_tpm.tsv",
-                "tximport/all_samples.transcript_counts.tsv",
-                "tximport/all_samples.transcript_lengths.tsv",
-                "tximport/all_samples.transcript_tpm.tsv"
+                "transcript_usage/isoform_switch/isoform_switch_results.rds"
             ],
             [
                 "chr22_1-17550000.mmi:md5,8d3ef72648b862a316f51ce13994543e",
@@ -492,19 +491,10 @@
                 "drimseq_object.rds:md5,03df2248fc229238587471ec69995d5e",
                 "drimseq_transcript_results.csv:md5,e202e2da194ee019f9af1768950892e7",
                 "isoform_switch_results.csv:md5,a227d42afbcc590b4e949075cde4a5b6",
-                "isoform_switch_results.rds:md5,c08bc3be70025c07e418f2c4a2baca64",
-                "reference.tx2gene.tsv:md5,1cad27eee9355a5c003a9c8da17044ac",
-                "all_samples.gene_counts.tsv:md5,e2a88ddb4e4c819fc3be060f555f65f1",
-                "all_samples.gene_counts_length_scaled.tsv:md5,5608381a483cc82f96ab45dd55fb9b93",
-                "all_samples.gene_counts_scaled.tsv:md5,e2a88ddb4e4c819fc3be060f555f65f1",
-                "all_samples.gene_lengths.tsv:md5,1f8cc4e38a3443abeddd431d71e78b6d",
-                "all_samples.gene_tpm.tsv:md5,e2a88ddb4e4c819fc3be060f555f65f1",
-                "all_samples.transcript_counts.tsv:md5,61a89c31b4afb888aa37779544ed960a",
-                "all_samples.transcript_lengths.tsv:md5,17e58e48a180471b3547c9cd26376004",
-                "all_samples.transcript_tpm.tsv:md5,61a89c31b4afb888aa37779544ed960a"
+                "isoform_switch_results.rds:md5,c08bc3be70025c07e418f2c4a2baca64"
             ]
         ],
-        "timestamp": "2026-07-16T17:34:38.661443",
+        "timestamp": "2026-08-25T17:54:08.682914",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
