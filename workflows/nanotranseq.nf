@@ -18,6 +18,8 @@ include { DIFFERENTIAL_ANALYSIS           } from '../subworkflows/nfdata-omics/d
 include { PSEUDOALIGNMENT                 } from '../subworkflows/local/pseudoalignment/main'
 include { SIGNAL_ANALYSIS                 } from '../subworkflows/local/signal_analysis/main'
 include { NANOPOLISH_POLYA                } from '../modules/local/nanopolish_polya/main'
+include { M6ANET                          } from '../modules/local/m6anet/main'
+include { RNA_METHYLATION                 } from '../subworkflows/local/rna_methylation/main'
 include { TRANSCRIPT_USAGE                } from '../subworkflows/local/transcript_usage/main'
 include { MINIMAP2_ALIGN as MINIMAP2_TRANSCRIPTOME } from '../modules/nf-core/minimap2/align/main'
 include { UNTAR                           } from '../modules/nf-core/untar/main'
@@ -55,13 +57,13 @@ workflow NANOTRANSEQ {
 
     def ch_versions = channel.empty()
     def ch_multiqc_files = channel.empty()
-    //
-    // MODULE: Run QC on raw reads
-    //
-    RAW_READS_QC (
-        ch_samplesheet
-    )
-    ch_versions = ch_versions.mix(RAW_READS_QC.out.versions)
+    // //
+    // // MODULE: Run QC on raw reads
+    // //
+    // RAW_READS_QC (
+    //     ch_samplesheet
+    // )
+    // ch_versions = ch_versions.mix(RAW_READS_QC.out.versions)
 
     //
     // Run Chopper if cDNA sequencing was performed
@@ -90,8 +92,9 @@ workflow NANOTRANSEQ {
     // m6anet (RNA modifications) and xpore (RNA methylation) analyses consume.
     // poly(A) uses the genome alignment, so it does not require the transcriptome BAM.
     def needs_transcriptome_bam = params.quantification_tool == 'oarfish' ||
-                                  params.quantification_tool == 'salmon' ||
-                                  params.quantification_tool == 'both'
+                                  params.quantification_tool == 'both' ||
+                                  params.run_rna_modifications ||
+                                  params.run_rna_methylation
     if (needs_transcriptome_bam) {
         MINIMAP2_TRANSCRIPTOME(
             ch_reads,
@@ -147,12 +150,12 @@ workflow NANOTRANSEQ {
 
         if (params.run_coding_potential) {
             if (params.skip_cpat || params.skip_feelnc || params.skip_plek) {
-                exit 1, "Coding-potential skips are not supported yet because COMBINE_PREDICTIONS currently expects CPAT, FEELnc and PLEK outputs."
+                error("Coding-potential skips are not supported yet because COMBINE_PREDICTIONS currently expects CPAT, FEELnc and PLEK outputs.")
             }
             has_cpat_models = params.cpat_hexamer && params.cpat_logit_model
             has_partial_cpat_models = params.cpat_hexamer || params.cpat_logit_model
             if (has_partial_cpat_models && !has_cpat_models) {
-                exit 1, "Coding-potential analysis requires both --cpat_hexamer and --cpat_logit_model when using pre-built CPAT models."
+                error("Coding-potential analysis requires both --cpat_hexamer and --cpat_logit_model when using pre-built CPAT models.")
             }
 
             EXTRACT_MRNA_SEQUENCES(
@@ -239,16 +242,13 @@ workflow NANOTRANSEQ {
     }
 
     //
-    // Run pseudoalignment if either `salmon` or `both` is selected as quantification tool
+    // Run pseudoalignment if either `oarfish` or `both` is selected as quantification tool
     //
-    if (params.quantification_tool == 'salmon' || params.quantification_tool == 'both') {
+    if (params.quantification_tool == 'oarfish' || params.quantification_tool == 'both') {
 
         PSEUDOALIGNMENT(
             ch_gtf,
-            ch_transcriptome_bam,
-            ch_reads,
-            ch_fasta,
-            ch_transcript_fasta,
+            ch_transcriptome_bam
         )
         ch_versions = ch_versions.mix(PSEUDOALIGNMENT.out.versions)
 
@@ -268,17 +268,31 @@ workflow NANOTRANSEQ {
 
     //
     // SUBWORKFLOW: Direct-RNA signal preparation (nanopolish index).
-    // Runs automatically when poly(A) is enabled
+    // Runs automatically when poly(A), RNA modifications or RNA methylation are enabled
     //
-    if (params.run_polya) {
+    def needs_signal = params.run_polya ||
+                       params.run_rna_modifications ||
+                       params.run_rna_methylation
+
+    if (needs_signal) {
         // Read the fast5 signal directory per sample from the samplesheet
         def sheet_dir = file(params.input).parent
+        // Name the flags actually requested, so the error points at the right one.
+        def signal_flags = [
+            'run_polya'            : params.run_polya,
+            'run_rna_modifications': params.run_rna_modifications,
+            'run_rna_methylation'  : params.run_rna_methylation,
+        ].findAll { _flag, enabled -> enabled }
+         .keySet()
+         .collect { flag -> "--${flag}" }
+         .join(', ')
+
         ch_fast5_in = channel
             .fromPath(params.input)
             .splitCsv(header: true)
             .map { row ->
                 if (!row.fast5) {
-                    error("--run_polya requires a 'fast5' column in the samplesheet (sample: ${row.sample})")
+                    error("${signal_flags} requires a 'fast5' column in the samplesheet (sample: ${row.sample})")
                 }
                 def f5 = row.fast5 ==~ /^(\/|[a-zA-Z][a-zA-Z0-9+.-]*:\/\/).*/ ?
                     file(row.fast5, checkIfExists: true) :
@@ -308,7 +322,7 @@ workflow NANOTRANSEQ {
         SIGNAL_ANALYSIS(
             ch_signal,
             ch_transcriptome_bam,
-            ch_transcript_fasta,
+            ch_transcript_fasta.first(),
             params.run_rna_modifications || params.run_rna_methylation
         )
         ch_versions = ch_versions.mix(SIGNAL_ANALYSIS.out.versions)
@@ -325,7 +339,37 @@ workflow NANOTRANSEQ {
             ch_versions = ch_versions.mix(NANOPOLISH_POLYA.out.versions)
         }
 
+        //
+        // RNA modifications: per-sample m6A calling (m6anet) off the shared eventalign.
+        //
+        if (params.run_rna_modifications) {
+            M6ANET(SIGNAL_ANALYSIS.out.eventalign)
+            ch_versions = ch_versions.mix(M6ANET.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(M6ANET.out.mqc)
+        }
+
+        //
+        // RNA methylation: differential between conditions (xpore), same eventalign.
+        //
+        if (params.run_rna_methylation) {
+            RNA_METHYLATION(SIGNAL_ANALYSIS.out.eventalign)
+            ch_versions = ch_versions.mix(RNA_METHYLATION.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(RNA_METHYLATION.out.mqc)
+        }
     }
+
+    //
+    // MODULE: Run QC on raw reads.
+    //
+    // Called here, after the modification steps, because its MultiQC run collects their
+    // custom-content files: `ch_multiqc_files` has to be complete before this point.
+    //
+    RAW_READS_QC (
+        ch_samplesheet,
+        ch_multiqc_files
+    )
+    ch_versions = ch_versions.mix(RAW_READS_QC.out.versions)
+
 
     //
     // Collate and save software versions

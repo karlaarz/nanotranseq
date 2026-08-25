@@ -50,12 +50,6 @@
                     "enum": ["featurecounts", "oarfish", "both"],
                     "default": "featurecounts"
                 },
-                "pseudoaligner": {
-                    "type": "string",
-                    "description": "Transcript quantifier used in the pseudoalignment path (when --quantification_tool is 'oarfish' or 'both'). 'oarfish' is ONT-native and the default; 'salmon' is opt-in and experimental on noisy long reads.",
-                    "enum": ["oarfish", "salmon"],
-                    "default": "oarfish"
-                },
                 "novel_class_codes": {
                     "type": "string",
                     "description": "Comma-separated gffcompare class codes to keep as novel transcript candidates for coding-potential analysis.",
@@ -124,6 +118,16 @@
                 "run_polya": {
                     "type": "boolean",
                     "description": "Estimate poly(A) tail length per read (nanopolish polya). Direct-RNA input with raw signal (FAST5) required. Signal preparation runs automatically. Produces a per-read TSV; no between-condition comparison is performed.",
+                    "default": false
+                },
+                "run_rna_modifications": {
+                    "type": "boolean",
+                    "description": "Detect and quantify RNA modifications per sample (m6anet, m6A). Direct-RNA input with raw signal (FAST5) and --transcript_fasta required. Signal preparation runs automatically.",
+                    "default": false
+                },
+                "run_rna_methylation": {
+                    "type": "boolean",
+                    "description": "Detect and quantify differential RNA methylation between conditions (xpore). Direct-RNA input with raw signal, --transcript_fasta, and a design of >=2 conditions with >=3 replicates each (samplesheet 'condition' column) required. Signal preparation runs automatically.",
                     "default": false
                 },
                 "email": {

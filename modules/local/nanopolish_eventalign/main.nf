@@ -8,7 +8,7 @@ process NANOPOLISH_EVENTALIGN {
         'biocontainers/nanopolish:0.14.0--h773013f_3' }"
 
     input:
-    tuple val(meta), path(reads), path(index), path(bam), path(bai)  // reads + nanopolish index sidecars, reads-to-transcriptome BAM + index
+    tuple val(meta), path(reads), path(index), path(fast5_dir), path(bam), path(bai)  // reads + nanopolish index sidecars + raw signal dir, reads-to-transcriptome BAM + index
     path transcript_fasta                                            // transcriptome FASTA (reads must be aligned to this)
 
     output:
